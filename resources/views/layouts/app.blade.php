@@ -92,9 +92,9 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                     <button class="ui blue button">{{ Auth::user()->name }} </button><span class="caret"></span>
                                 </a>
-
                                 <ul class="dropdown-menu">
                                     <li>
+                                        <a href="/excel-download">Выгрузки</a>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

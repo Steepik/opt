@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\ExportXls;
 use App\Http\Requests\ProfileInfoRequest;
 use App\Http\Requests\ProfilePasswordRequest;
 use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -48,6 +48,15 @@ class ProfileController extends Controller
 
         if($result) {
             return redirect()->back()->with('success-pass', '');
+        }
+    }
+
+    public function excelDownload($type)
+    {
+        if(ExportXls::export($type)) {
+            //download started
+        } else {
+            return redirect('/excel-download');
         }
     }
 }

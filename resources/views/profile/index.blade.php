@@ -9,8 +9,8 @@
                             <div class="header-cart">
                                 <h4 class="title">Редактирование профиля</h4>
                             </div>
-                            <h4 class="ui horizontal divider header"><i class="address card outline icon"></i> Ваши данные </h4>
                             <div class="content">
+                                <h4 class="ui horizontal divider header"><i class="address card outline icon"></i> Ваши данные </h4>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="ui cards">

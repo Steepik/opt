@@ -56,6 +56,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/profile', 'ProfileController@index')->name('profile');
     Route::put('/profile/update_info', 'ProfileController@updateInfo')->name('profile_update');
     Route::put('/profile/update_pass', 'ProfileController@updatePass')->name('profile_up_pass');
+    Route::get('/excel-download', function() {
+        return view('profile.excel-upload');
+    });
+    Route::get('/excel-download/{type}', 'ProfileController@excelDownload')->name('excel-download');
 });
 
 // *** Admin Routes *** //
