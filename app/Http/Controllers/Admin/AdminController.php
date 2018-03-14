@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Cart;
 use App\GlobalNotify;
 use App\Http\Controllers\Controller;
 use App\Mail\AccessGiven;
@@ -79,27 +80,10 @@ class AdminController extends Controller
     {
         $orders = Order::waitStatus()->get();
         foreach($orders as $key => $order) {
-            if($order->ptype == 1) {
-                $data = new Tire();
-                $result = $data->where('tcae', $order->tcae)->first();
-                $orders[$key]['pname'] = $result->name;
-                $orders[$key]['price'] = $result->price_opt;
-            } elseif($order->ptype == 2) {
-                $data = new Truck();
-                $result = $data->where('tcae', $order->tcae)->first();
-                $orders[$key]['pname'] = $result->name;
-                $orders[$key]['price'] = $result->price_opt;
-            } elseif ($order->ptype == 3) {
-                $data = new Special();
-                $result = $data->where('tcae', $order->tcae)->first();
-                $orders[$key]['pname'] = $result->name;
-                $orders[$key]['price'] = $result->price_opt;
-            } elseif($order->ptype == 4) {
-                $data = new Wheel();
-                $result = $data->where('tcae', $order->tcae)->first();
-                $orders[$key]['pname'] = $result->name;
-                $orders[$key]['price'] = $result->price_opt;
-            }
+            $data = Cart::getInstanceProductType($order->ptype);
+            $result = $data->where('tcae', $order->tcae)->first();
+            $orders[$key]['pname'] = $result->name;
+            $orders[$key]['price'] = $result->price_opt;
         }
         return view('admin.list.pcheck', compact('orders'));
     }
