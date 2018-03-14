@@ -34,6 +34,8 @@ class Cart
             $result = new Special();
         } elseif($type == 4) {
             $result = new Wheel();
+        } else {
+            $result = array();
         }
 
         return $result;
