@@ -72,8 +72,6 @@ class ImportExcelToDb
 
     /**
      * Create new record in DB with data from excel
-     * -------------------- OR ------------------------------
-     * If record already exist update this with new data
      *
      * @param $brand_id
      * @param $name
