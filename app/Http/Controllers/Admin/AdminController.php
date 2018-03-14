@@ -9,11 +9,7 @@ use App\Mail\AccessGiven;
 use App\Mail\SendNotifyStatus;
 use App\NotifyUsers;
 use App\Order;
-use App\Special;
-use App\Tire;
-use App\Truck;
 use App\User;
-use App\Wheel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
