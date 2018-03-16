@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-7">
             <div class="card">
                 <div class="header">
                     <h4 class="title">Резерв</h4>
@@ -12,15 +12,15 @@
                     <form action="{{ route('reserve') }}" method="GET">
                         <div class="content">
                             <div class="row">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <input type="text" name="q" value="{{ app('request')->input('q') }}" class="form-control">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <button type="submit" class="btn btn-success">Поиск</button>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <h2>Найдено: {{ $t_count }}</h2>
                                 </div>
                             </div>
@@ -55,14 +55,6 @@
                                             @csrf
                                             @method('POST')
                                         </form>
-                                    @else
-                                        <form action="{{ route('reserve-delete') }}" method="POST">
-                                            <button type="submit" class="btn btn-success btn-fill">Убрать с резерва</button>
-                                            <input type="hidden" name="tcae" value="{{ $tire->tcae }}">
-                                            <input type="hidden" name="ptype" value="1">
-                                            @csrf
-                                            @method('POST')
-                                        </form>
                                     @endif
                                 </td>
                             </tr>
@@ -75,6 +67,47 @@
                 </div>
                 @else
                     <div class="content">Пусто</div>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Товары в резерве</h4>
+                    <p class="category">Список товаров которые уже в резерве</p>
+                </div>
+                <hr/>
+                @if(!$p_reserve->isEmpty())
+                <div class="content table-responsive table-full-width">
+                    <table class="table table-responsive">
+                        <thead>
+                        <th>№</th>
+                        <th>Название</th>
+                        <th>Действия</th>
+                        </thead>
+                        <tbody>
+                        @foreach($p_reserve as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>
+                                    <form action="{{ route('reserve-delete') }}" method="POST">
+                                        <button type="submit" class="btn btn-success btn-fill">Убрать с резерва</button>
+                                        <input type="hidden" name="tcae" value="{{ $item->tcae }}">
+                                        <input type="hidden" name="ptype" value="1">
+                                        @csrf
+                                        @method('POST')
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                    <div class="content">
+                        <p>Пусто</p>
+                    </div>
                 @endif
             </div>
         </div>

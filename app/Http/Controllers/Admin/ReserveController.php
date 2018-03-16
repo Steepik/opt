@@ -15,17 +15,23 @@ class ReserveController extends Controller
         $t_count = 0;
         if(!empty($request->q)) {
             $tires = Tire::where('name', 'like', '%' . $request->q . '%')->paginate(25);
-            $tires->each(function($item, $key){
+            $tires->each(function($item, $key) use ($tires) {
                $reserved = Reserve::where('tcae', $item->tcae)->first();
                if(! is_null($reserved)) {
                    $item['reserved'] = true;
+                   $tires->forget($key); // delete reserved product from collection
                }
             });
 
             $t_count =  Tire::where('name', 'like', '%' . $request->q . '%')->count();
         }
 
-        return view('admin.reserve.index', compact('tires', 't_count'));
+        //get products in reserve
+        $in_reserve = Reserve::pluck('tcae')->all();
+
+        $p_reserve = Tire::whereIn('tcae', $in_reserve)->get();
+
+        return view('admin.reserve.index', compact('tires', 't_count', 'p_reserve'));
     }
 
     public function addToReserve(Request $request)
