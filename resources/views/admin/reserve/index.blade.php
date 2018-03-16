@@ -50,7 +50,7 @@
                                     @if(!isset($tire->reserved))
                                         <form action="{{ route('reserve-add') }}" method="POST">
                                             <a href="{{ route('reserve-add') }}"><button type="submit" class="btn btn-default btn-fill">В резерв</button></a>
-                                            <input type="hidden" name="pid" value="{{ $tire->id }}">
+                                            <input type="hidden" name="tcae" value="{{ $tire->tcae }}">
                                             <input type="hidden" name="ptype" value="1">
                                             @csrf
                                             @method('POST')
@@ -58,7 +58,7 @@
                                     @else
                                         <form action="{{ route('reserve-delete') }}" method="POST">
                                             <button type="submit" class="btn btn-success btn-fill">Убрать с резерва</button>
-                                            <input type="hidden" name="pid" value="{{ $tire->id }}">
+                                            <input type="hidden" name="tcae" value="{{ $tire->tcae }}">
                                             <input type="hidden" name="ptype" value="1">
                                             @csrf
                                             @method('POST')

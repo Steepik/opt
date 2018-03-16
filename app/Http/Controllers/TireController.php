@@ -109,7 +109,7 @@ class TireController extends Controller
 
             $data = $tire->where($filter)->where('quantity', '>', 0)->paginate(10);
             $data->each(function($item, $key) use ($data) {
-                $reserve = Reserve::where('pid', $item->id)->where('ptype', 1)->first();
+                $reserve = Reserve::where('tcae', $item->tcae)->where('ptype', 1)->first();
                 if(! is_null($reserve)) { // if product is in reserve then remove element from collect
                     $data->forget($key);
                 }

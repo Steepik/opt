@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Reserve extends Model
 {
     protected $fillable = [
-        'pid', 'ptype'
+        'tcae', 'ptype'
     ];
 }

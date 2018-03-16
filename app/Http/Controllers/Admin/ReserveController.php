@@ -16,7 +16,7 @@ class ReserveController extends Controller
         if(!empty($request->q)) {
             $tires = Tire::where('name', 'like', '%' . $request->q . '%')->paginate(25);
             $tires->each(function($item, $key){
-               $reserved = Reserve::where('pid', $item->id)->first();
+               $reserved = Reserve::where('tcae', $item->tcae)->first();
                if(! is_null($reserved)) {
                    $item['reserved'] = true;
                }
@@ -41,7 +41,7 @@ class ReserveController extends Controller
     public function deleteFromReserve(Request $request)
     {
         if($request->ptype == 1) {
-            Reserve::where('pid', $request->pid)->delete();
+            Reserve::where('tcae', $request->tcae)->delete();
             return redirect()->back()->with('success', 'Выбраный товар был удален с резерва');
         } else {
             return redirect()->back();
