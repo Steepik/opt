@@ -40,6 +40,7 @@
                                                 <option value="Зимняя" @if(Session::get('tseason') == 'Зимняя') selected @endif>Зимние</option>
                                                 <option value="nospike" @if(Session::get('tseason') == 'nospike') selected @endif>Зимние нешипованные</option>
                                                 <option value="spike" @if(Session::get('tseason') == 'spike') selected @endif>Зимние шипованные</option>
+                                                <option value="Всесезонная" @if(Session::get('tseason') == 'Всесезонная') selected @endif>Всесезонная</option>
                                             </select>
                                         </div>
                                         <div class="field select">

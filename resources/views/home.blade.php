@@ -52,6 +52,7 @@
                                             <option value="Зимняя">Зимние</option>
                                             <option value="nospike">Зимние нешипованные</option>
                                             <option value="spike">Зимние шипованные</option>
+                                            <option value="Всесезонная">Всесезонная</option>
                                         </select>
                                     </div>
                                     <div class="field select">
