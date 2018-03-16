@@ -85,7 +85,7 @@
                                     $ptotal = 0;
                                     $psum = 0;
                                 @endphp
-                                @foreach($user->orders()->where('sid', 6)->get() as $order)
+                                @foreach($user->orders()->where('sid', 6)->where('ptype', '!=', null)->get() as $order)
                                     @php
                                         $ptotal += $order->count;
                                         if($order->ptype != null) {
