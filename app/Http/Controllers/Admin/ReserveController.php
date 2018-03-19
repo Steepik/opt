@@ -26,9 +26,8 @@ class ReserveController extends Controller
             $t_count =  Tire::where('name', 'like', '%' . $request->q . '%')->count();
         }
 
-        //get products in reserve
+        //get products from reserve
         $in_reserve = Reserve::pluck('tcae')->all();
-
         $p_reserve = Tire::whereIn('tcae', $in_reserve)->get();
 
         return view('admin.reserve.index', compact('tires', 't_count', 'p_reserve'));
