@@ -83,6 +83,7 @@
                         <thead>
                         <th>№</th>
                         <th>Название</th>
+                        <th>Количество</th>
                         <th>Действия</th>
                         </thead>
                         <tbody>
@@ -90,6 +91,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->name }}</td>
+                                <td>{{ $item->quantity }}</td>
                                 <td>
                                     <form action="{{ route('reserve-delete') }}" method="POST">
                                         <button type="submit" class="btn btn-success btn-fill">Убрать с резерва</button>
