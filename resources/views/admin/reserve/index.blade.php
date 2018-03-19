@@ -45,7 +45,7 @@
                                 <td>@if(isset($tire->reserved))<span class="label label-danger">В резерве</span>@endif {{ $tire->name }}</td>
                                 <td>{{ $tire->price_roz }}</td>
                                 <td>{{ $tire->price_opt }}</td>
-                                <td>{{ $tire->quantity }}</td>
+                                <td style="text-align: center;">{{ $tire->quantity }}</td>
                                 <td>
                                     @if(!isset($tire->reserved))
                                         <form action="{{ route('reserve-add') }}" method="POST">
@@ -91,7 +91,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->name }}</td>
-                                <td>{{ $item->quantity }}</td>
+                                <td style="text-align: center;">{{ $item->quantity }}</td>
                                 <td>
                                     <form action="{{ route('reserve-delete') }}" method="POST">
                                         <button type="submit" class="btn btn-success btn-fill">Убрать с резерва</button>
