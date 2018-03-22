@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cart;
+use App\Events\PusherNotify;
 use App\HistoryOrders;
 use App\Order;
 use App\Special;
@@ -100,6 +101,9 @@ class CartController extends Controller
             ]);
         }
         Cart::clearCart();
+
+        //Notify admin about new order
+        PusherNotify::dispatch(Auth::user()->legal_name . ', совершил новый заказ!');
 
         return redirect('/');
     }

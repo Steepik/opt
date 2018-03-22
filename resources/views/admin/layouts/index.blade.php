@@ -153,8 +153,12 @@
     </div>
 </div>
 
+<!-- notify sound -->
+<audio id="buzzer" src="{{ asset('notify/notify.mp3') }}" type="audio/ogg"></audio>
 
 </body>
+
+<script src="{{ asset('js/app.js') }}"></script>
 
 <!--   Core JS Files   -->
 <script src="{{ asset('admin/assets/js/jquery-1.10.2.js') }}" type="text/javascript"></script>
@@ -178,6 +182,27 @@
 
 <script src="{{ asset('admin/assets/js/main.js') }}"></script>
 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 @yield('page_script')
+
+<!-- Real-time notify -->
+<script>
+    window.Echo.channel('admin-notify')
+        .listen('.notify', (e) => {
+
+        swal({
+                 title: "Новый заказ",
+                 text: e.message,
+                 icon: "warning",
+                 button: "Закрыть окно",
+             });
+
+        //play notify sound
+        var buzzer = $('#buzzer')[0];
+        buzzer.play();
+        return false;
+    });
+</script>
 
 </html>
