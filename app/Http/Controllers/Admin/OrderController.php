@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Cart;
 use App\Comment;
 use App\HistoryOrders;
-use App\Http\Controllers\CartController;
 use App\Order;
 use App\OrderMerges;
 use App\StatusText;
@@ -18,6 +17,45 @@ use NumberToWords\NumberToWords;
 
 class OrderController extends Controller
 {
+    /**
+     * @var Order
+     */
+    public $order;
+
+    /**
+     * @var OrderMerges
+     */
+    public $m_order;
+
+    /**
+     * @var HistoryOrders
+     */
+    public $h_order;
+
+    /**
+     * @var User
+     */
+    public $user;
+
+    /**
+     * OrderController constructor.
+     * @param Order $order
+     * @param OrderMerges $m_order
+     * @param HistoryOrders $h_order
+     * @param User $user
+     */
+    public function __construct(
+        Order $order,
+        OrderMerges $m_order,
+        HistoryOrders $h_order,
+        User $user)
+    {
+        $this->order = $order;
+        $this->m_order = $m_order;
+        $this->h_order = $h_order;
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +71,7 @@ class OrderController extends Controller
             array_push($sql, array($arr));
         }
         if(!empty($request->legal_name)) {
-            $users = User::where('legal_name', 'like', '%' . $request->legal_name . '%')->pluck('id')->all();
+            $users = $this->user->where('legal_name', 'like', '%' . $request->legal_name . '%')->pluck('id')->all();
             $uid = $users;
         }
         if(!empty($request->start)) {
@@ -45,14 +83,14 @@ class OrderController extends Controller
         }
 
         if(!empty($request->legal_name)) {
-            $orders = Order::whereYear('updated_at', '=', date('Y'))
+            $orders = $this->order->whereYear('updated_at', '=', date('Y'))
                 ->orderBy('updated_at', 'DESC')
                 ->where($sql)
                 ->whereIn('uid', $uid)
                 ->whereBetween('created_at',  [$date_start, $date_end])
                 ->paginate(10);
         } else {
-            $orders = Order::whereYear('updated_at', '=', date('Y'))
+            $orders = $this->order->whereYear('updated_at', '=', date('Y'))
                 ->orderBy('updated_at', 'DESC')
                 ->where($sql)
                 ->whereBetween('created_at',  [$date_start, $date_end])
@@ -65,8 +103,8 @@ class OrderController extends Controller
 
     public function showMergeOrder($id)
     {
-        $order = Order::find($id);
-        $merged = OrderMerges::where('cnum', $order->cnum)->get();
+        $order = $this->order->find($id);
+        $merged = $this->m_order->where('cnum', $order->cnum)->get();
         $plist = collect();
         $total_sum = 0;
         foreach($merged as $item) {
@@ -77,7 +115,7 @@ class OrderController extends Controller
                    $plist->push($product);
                    $total_sum += $product->price_opt * $info_order->count;
                } else {
-                   $history = HistoryOrders::where('oid', $info_order->id)->first();
+                   $history = $this->h_order->where('oid', $info_order->id)->first();
                    $history['count'] = $info_order->count;
                    $plist->push($history);
                    $total_sum += $history->price_opt * $info_order->count;
@@ -90,11 +128,11 @@ class OrderController extends Controller
 
     public function showOrder($id)
     {
-        $order = Order::find($id);
+        $order = $this->order->find($id);
         $pinstance = Cart::getInstanceProductType($order->ptype);
         $product = $pinstance->where('tcae', $order->tcae)->first();
         if(is_null($product)) {
-            $product = HistoryOrders::where('oid', $order->id)->first();
+            $product = $this->h_order->where('oid', $order->id)->first();
         }
         return view('admin.order_info', compact('order', 'product'));
     }
@@ -102,7 +140,7 @@ class OrderController extends Controller
     public function changeOrderStatus(Request $request)
     {
         if($request->ajax()) {
-            $order = Order::find($request->oid);
+            $order = $this->order->find($request->oid);
             if($order->ptype != null) {
                 $order->sid = $request->sid;
                 $order->save();
@@ -110,9 +148,9 @@ class OrderController extends Controller
                 // set all nested orders status
                 $order->sid = $request->sid; //main order set
                 $order->save();
-                $m_orders = OrderMerges::where('mid', $request->oid)->get();
+                $m_orders = $this->m_order->where('mid', $request->oid)->get();
                 foreach ($m_orders as $item) {
-                    $order = Order::find($item->oid);
+                    $order = $this->order->find($item->oid);
                     $order->sid = $request->sid;
                     $order->save();
                 }
@@ -122,9 +160,8 @@ class OrderController extends Controller
         }
     }
 
-    public function addComment(Request $request, $id)
+    public function addComment(Comment $comment, Request $request, $id)
     {
-        $comment = new Comment();
         $comment->text = $request->text;
         $comment->uid = Auth::user()->id;
         $comment->oid = $id;
@@ -140,15 +177,15 @@ class OrderController extends Controller
         $order = Order::find($id);
         $product = Cart::getInstanceProductType($order->ptype)->where('tcae', $order->tcae)->first();
         if(is_null($product)) {
-            $product = HistoryOrders::where('oid', $order->id)->first();
+            $product = $this->h_order->where('oid', $order->id)->first();
         }
         return view('admin.invoice', compact('order', 'product', 'ntw'));
     }
 
     public function invoice_merged($id)
     {
-        $order = Order::find($id);
-        $merged = OrderMerges::where('cnum', $order->cnum)->get();
+        $order = $this->order->find($id);
+        $merged = $this->m_order->where('cnum', $order->cnum)->get();
         $ntw = new NumberToWords();
         $plist = collect();
         $total_sum = 0;
@@ -161,7 +198,7 @@ class OrderController extends Controller
                     $plist->push($product);
                     $total_sum += $product->price_opt * $info_order->count;
                 } else {
-                    $history = HistoryOrders::where('oid', $info_order->id)->first();
+                    $history = $this->h_order->where('oid', $info_order->id)->first();
                     $history['count'] = $info_order->count;
                     $plist->push($history);
                     $total_sum += $history->price_opt * $info_order->count;
@@ -177,14 +214,12 @@ class OrderController extends Controller
     public function orderAction(Request $request)
     {
        if($request->oid) {
-           $orders = new Order();
-
            if ($request->action == 'del') {
                $merges = new OrderMerges();
                $ids = array();
 
                foreach($request->oid as $oid) {
-                   $order = $orders->where('id', $oid)->first();
+                   $order = $this->order->where('id', $oid)->first();
                    if ($order->sid != 4) {
                        $merged = $merges->where('cnum', $order->cnum)->get();
 
@@ -194,18 +229,16 @@ class OrderController extends Controller
                        $ids[] = (int)$oid; // add common merged order's id to delete
                    }
                    //delete order history
-                   HistoryOrders::whereIn('oid', $ids)->delete();
+                   $this->h_order->whereIn('oid', $ids)->delete();
                }
 
-               $orders->destroy($ids);
+               $this->order->destroy($ids);
                return redirect()->back();
 
            } elseif ($request->action == 'merge') {
                if($this->checkStatus($request->oid) and count($request->oid) > 1) {
-                   $merge = new OrderMerges();
                    $cnum = $this->unique_cnum();
-
-                   $orders_info = Order::whereIn('id', $request->oid)->pluck('uid')->all();
+                   $orders_info = $this->order->whereIn('id', $request->oid)->pluck('uid')->all();
 
                    //check if all selected orders belongs to same user
                    foreach($orders_info as $item) {
@@ -216,7 +249,7 @@ class OrderController extends Controller
                         }
                    }
 
-                   $o_insertId = $orders->create([
+                   $o_insertId = $this->order->create([
                        'uid' => $orders_info[0],
                        'cnum' => $cnum,
                        'ptype' => NULL,
@@ -227,8 +260,8 @@ class OrderController extends Controller
                    ]);
 
                    foreach ($request->oid as $oid) {
-                       $cae = $orders->where('id', $oid)->first(); //get CAE
-                       $merge->create([
+                       $cae = $this->order->where('id', $oid)->first(); //get CAE
+                       $this->m_order->create([
                            'uid' => Auth::user()->id,
                            'oid' => $oid,
                            'tcae' => $cae->tcae,
@@ -236,7 +269,7 @@ class OrderController extends Controller
                            'cnum' => $cnum,
                        ]);
 
-                       $orders->find($oid)->update(['merged' => 1]); // set as merged
+                       $this->order->find($oid)->update(['merged' => 1]); // set as merged
                    }
 
                    return redirect()->back()->with('merge-success', 'Заказы были успешно объединены');
@@ -262,8 +295,7 @@ class OrderController extends Controller
     public function checkStatus($id)
     {
         if(count($id) > 1) { // if orders more then 1
-            $orders = new Order();
-            $order = $orders->whereIn('id', $id)->where('sid', 2)->get();
+            $order = $this->order->whereIn('id', $id)->where('sid', 2)->get();
 
             if(count($id) == count($order)) { // if all records have status "2"
                 return true;
@@ -281,8 +313,7 @@ class OrderController extends Controller
      */
     public function getOrderMergeCount($data)
     {
-        $orders = new Order();
-        $result = $orders->whereIn('id', $data)->get();
+        $result = $this->order->whereIn('id', $data)->get();
         $count = 0;
 
         foreach($result as $item) {
@@ -299,12 +330,10 @@ class OrderController extends Controller
      */
     public function unique_cnum()
     {
-        $merges = new OrderMerges();
-        $orders = new Order();
         $num = mt_rand(100000, 999999);
 
-        $get_list = $merges->where('cnum', '=', $num)->get();
-        $get_order_list = $orders->where('cnum', '=', $num)->get();
+        $get_list = $this->m_order->where('cnum', '=', $num)->get();
+        $get_order_list = $this->order->where('cnum', '=', $num)->get();
 
         if($get_list->isEmpty() and $get_order_list->isEmpty()) {
             return $num;

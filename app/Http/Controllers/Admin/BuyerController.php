@@ -13,9 +13,9 @@ class BuyerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        $buyers = User::isAdmin(0)->paginate(10);
+        $buyers = $user->isAdmin(0)->paginate(10);
 
         return view('admin.list.buyers', compact('buyers'));
     }

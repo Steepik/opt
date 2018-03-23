@@ -4,7 +4,7 @@
     <div class="ui container">
         <div class="ui segments">
             <div class="ui segment">
-                <p>Информация о заказе @if($products['sid'] == 5 and $products['sid'] != 4 and $products['sid'] != 6) <a href="/bill-m/{{ $products['oid'] }}" class="btn link">Печать Счета</a> @endif</p>
+                <p>Информация о заказе @if($products['sid'] == 2 or $products['sid'] == 5 and $products['sid'] != 4 and $products['sid'] != 6 and Auth::user()->payment_type == 0) <a href="/bill-m/{{ $products['oid'] }}" class="btn link">Печать Счета</a> @endif</p>
             </div>
             <div class="ui secondary segment">
                 <div class="ui cards top-info">

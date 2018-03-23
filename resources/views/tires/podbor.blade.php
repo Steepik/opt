@@ -209,7 +209,9 @@
                                                     @php
                                                         $image_id = \App\Tire::brandImage($tire->brand->name)->first();
                                                     @endphp
-                                                    <img src="//torgshina.com/image/manufacturer/{{ $image_id->manufacturer_id }}.jpg" alt="{{ $tire->brand->name }}">
+                                                    @if($image_id != null)
+                                                        <img src="//torgshina.com/image/manufacturer/{{ $image_id->manufacturer_id }}.jpg" alt="{{ $tire->brand->name }}">
+                                                    @endif
                                                 </div><br/>
                                                 <span class="podbor-prod-name">{{ $tire->name }}</span>
                                                 <div class="podbor-cae">{{ $tire->tcae }}

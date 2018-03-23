@@ -12,6 +12,20 @@ use Illuminate\Support\Facades\Hash;
 class ProfileController extends Controller
 {
     /**
+     * @var User
+     */
+    public $user;
+
+    /**
+     * ProfileController constructor.
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -24,7 +38,7 @@ class ProfileController extends Controller
 
     public function updateInfo(ProfileInfoRequest $request)
     {
-        $user = User::find(Auth::user()->id);
+        $user = $this->user->find(Auth::user()->id);
         $result = $user->update($request->except('_token'));
 
         if($result) {
@@ -34,7 +48,7 @@ class ProfileController extends Controller
 
     public function updatePass(ProfilePasswordRequest $request)
     {
-        $user = User::find(Auth::user()->id);
+        $user = $this->user->find(Auth::user()->id);
         $check = Hash::check($request->old_pass, $user->password);
 
         //if old password doesn't match

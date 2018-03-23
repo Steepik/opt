@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Cart;
-use App\GlobalNotify;
 use App\Http\Controllers\Controller;
 use App\Mail\AccessGiven;
 use App\Mail\SendNotifyStatus;
-use App\NotifyUsers;
 use App\Order;
 use App\User;
 use Illuminate\Http\Request;
@@ -15,12 +13,34 @@ use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
+
+    /**
+     * @var Order
+     */
+    public $order;
+
+    /**
+     * @var User
+     */
+    public $user;
+
+    /**
+     * AdminController constructor.
+     * @param Order $order
+     * @param User $user
+     */
+    public function __construct(Order $order, User $user)
+    {
+        $this->order = $order;
+        $this->user = $user;
+    }
+
     public function index()
     {
-        $users = User::isAdmin(0)->get();
-        $access = User::hasAccess(0)->get();
-        $orders = Order::doneOrders()->get();
-        $s_wait = Order::waitStatus()->get();
+        $users = $this->user->isAdmin(0)->get();
+        $access = $this->user->hasAccess(0)->get();
+        $orders = $this->order->doneOrders()->get();
+        $s_wait = $this->order->waitStatus()->get();
         $chart = $this->getDataForChart();
 
         return view('admin.dashboard', compact('users', 'access', 'orders', 's_wait', 'chart'));
@@ -28,14 +48,14 @@ class AdminController extends Controller
 
     public function userModeration()
     {
-        $users = User::hasAccess(0)->get();
+        $users = $this->user->hasAccess(0)->get();
         return view('admin.list.moder', compact('users'));
     }
 
     public function giveAccess(Request $request) {
         $uid = $request->uid;
         $action = $request->action;
-        $user = User::find($uid);
+        $user = $this->user->find($uid);
 
         if($action == 'update') {
             $user->access = true;
@@ -46,7 +66,7 @@ class AdminController extends Controller
 
             return redirect()->back()->with('updated', $user->name);
         } elseif($action == 'delete') {
-            User::destroy($uid);
+            $this->user->destroy($uid);
 
             return redirect()->back()->with('deleted', '');
         } elseif($action == 'blocked') {
@@ -74,7 +94,7 @@ class AdminController extends Controller
 
     public function productModeration()
     {
-        $orders = Order::waitStatus()->get();
+        $orders = $this->order->waitStatus()->get();
         foreach($orders as $key => $order) {
             $data = Cart::getInstanceProductType($order->ptype);
             $result = $data->where('tcae', $order->tcae)->first();
@@ -87,7 +107,7 @@ class AdminController extends Controller
     public function productAction(Request $request) {
         $oid = $request->oid;
         $action = $request->action;
-        $order = Order::find($oid);
+        $order = $this->order->find($oid);
 
         if($action == 'update') {
             $order->sid = 2; // set status ready to go
@@ -119,7 +139,7 @@ class AdminController extends Controller
         $month = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12); //num list of month
         $data = array();
         foreach($month as $m) {
-            $data[] = Order::whereYear('updated_at', date('Y'))
+            $data[] = $this->order->whereYear('updated_at', date('Y'))
                 ->whereMonth('updated_at', '=', $m)
                 ->where('sid', 6)
                 ->where('merged', 0)

@@ -8,7 +8,6 @@ use App\Tire;
 use App\Truck;
 use App\Special;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Session;
 use Excel;
 use File;
 class TireController extends Controller
@@ -63,10 +62,8 @@ class TireController extends Controller
     public function filter($type, $twidth, $tprofile, $tdiameter, $tseason = '', $tbrand, $tcae = '', $taxis = '') {
         $session = Session();
         $filter = array();
-
         if ($type == 1) { // tires
             $tire = Tire::query();
-
             $session->forget(['twidth', 'tprofile', 'tdiameter', 'tseason', 'tbrand', 'tcae']);
             if (!empty($twidth)) {
                 $filter['twidth'] = $twidth;
@@ -106,7 +103,6 @@ class TireController extends Controller
                 $filter['tcae'] = $tcae;
                 $session->flash('tcae', $tcae);
             }
-
             $data = $tire->where($filter)->where('quantity', '>', 0)->paginate(10);
             $data->each(function($item, $key) use ($data) {
                 $reserve = Reserve::where('tcae', $item->tcae)->where('ptype', 1)->first();
@@ -114,7 +110,6 @@ class TireController extends Controller
                     $data->forget($key);
                 }
             });
-
         } elseif ($type == 2) { // trucks tires
             $truck = Truck::query();
             $session->forget(['trwidth', 'trprofile', 'trdiameter', 'trseason', 'trbrand', 'traxis', 'trcae']);
@@ -127,7 +122,6 @@ class TireController extends Controller
                 $session->flash('trprofile', $tprofile);
             }
             if (!empty($tdiameter)) {
-
                 //check if diameter has symbol like ',' change it to '.'
                 if(str_contains($tdiameter, ','))
                 {
@@ -138,7 +132,6 @@ class TireController extends Controller
                 {
                     $tdiameter = str_replace(['С', 'с'], 'C', $tdiameter);
                 }
-
                 $filter['tdiameter'] = $tdiameter;
                 $session->flash('trdiameter', $tdiameter);
             }
@@ -166,7 +159,6 @@ class TireController extends Controller
                 $filter['axis'] = $taxis;
                 $session->flash('traxis', $taxis);
             }
-
             $data = $truck->where($filter)->where('quantity', '>', 0)->paginate(10);
         } elseif ($type == 3) { // special tires
             $special = Special::query();
@@ -177,7 +169,6 @@ class TireController extends Controller
                 {
                     $twidth = str_replace(',', '.', $twidth);
                 }
-
                 $filter['twidth'] = $twidth;
                 $session->flash('swidth', $twidth);
             }
@@ -221,14 +212,12 @@ class TireController extends Controller
     public function getAllBrands()
     {
         $brand = collect();
-
         if(Redis::exists('brands')) {
             $brand = Redis::get('brands');
         } else {
             Tire::orderBy('name', 'ASC')->each(function($item, $key) use ($brand) {
                 $brand->push(['name' => $item->brand->name, 'id' => $item->brand->id]);
             });
-
             Redis::set('brands', $brand->sortBy('name')->unique(), 'EX', 3600);
             $brand = Redis::get('brands');
         }
