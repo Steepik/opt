@@ -46,11 +46,8 @@ class HomeController extends Controller
      * @param Order $order
      * @param OrderMerges $m_order
      */
-    public function __construct(
-        Order $order,
-        OrderMerges $m_order,
-        HistoryOrders $h_order
-    ){
+    public function __construct(Order $order, OrderMerges $m_order, HistoryOrders $h_order)
+    {
         $this->order = $order;
         $this->m_order = $m_order;
         $this->h_order = $h_order;

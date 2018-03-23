@@ -44,11 +44,7 @@ class OrderController extends Controller
      * @param HistoryOrders $h_order
      * @param User $user
      */
-    public function __construct(
-        Order $order,
-        OrderMerges $m_order,
-        HistoryOrders $h_order,
-        User $user)
+    public function __construct(Order $order, OrderMerges $m_order, HistoryOrders $h_order, User $user)
     {
         $this->order = $order;
         $this->m_order = $m_order;
