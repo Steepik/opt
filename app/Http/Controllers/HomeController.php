@@ -53,11 +53,8 @@ class HomeController extends Controller
         $this->h_order = $h_order;
     }
 
-    public function index(
-        HistoryOrders $history,
-        StatusText $status,
-        Request $request
-    ){
+    public function index(HistoryOrders $history, StatusText $status, Request $request)
+    {
         $products = array();
         $list = array();
         $get_status = $status->all();
