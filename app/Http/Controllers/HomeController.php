@@ -53,7 +53,7 @@ class HomeController extends Controller
         $this->h_order = $h_order;
     }
 
-    public function index(HistoryOrders $history, StatusText $status, Request $request)
+    public function index(StatusText $status, Request $request)
     {
         $products = array();
         $list = array();
@@ -73,7 +73,7 @@ class HomeController extends Controller
                     $products['product']['commented'] = $order->commented;
                 } else {
                     if($order->sid == 4 or $order->sid == 6 or $order->sid == 7) {
-                        $products['product'] = $history->where('oid', $order->id)->first();
+                        $products['product'] = $this->h_order->where('oid', $order->id)->first();
                         $products['product']['oid'] = $order->id;
                         $products['product']['cnum'] = $order->cnum;
                         $products['product']['count'] = $order->count;
@@ -84,7 +84,7 @@ class HomeController extends Controller
                     } else {
                         //delete order
                         $order->destroy($order->id);
-                        $history->where('oid', $order->id)->delete();
+                        $this->h_order->where('oid', $order->id)->delete();
 
                         return redirect(route('home'))->with('info-msg', 'После обновления базы товаров, заказ №' . $order->cnum . ' был удален, так как товара нет в наличии.');
                     }
