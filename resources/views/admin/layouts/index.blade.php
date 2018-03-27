@@ -182,8 +182,6 @@
 
 <script src="{{ asset('admin/assets/js/main.js') }}"></script>
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
 @yield('page_script')
 
 <!-- Real-time notify -->

@@ -232,40 +232,71 @@ class OrderController extends Controller
                return redirect()->back();
 
            } elseif ($request->action == 'merge') {
-               if($this->checkStatus($request->oid) and count($request->oid) > 1) {
+               if(count($request->oid) > 1) {
                    $cnum = $this->unique_cnum();
-                   $orders_info = $this->order->whereIn('id', $request->oid)->pluck('uid')->all();
+                   $orders_info = $this->order->whereIn('id', $request->oid)->get();
 
                    //check if all selected orders belongs to same user
                    foreach($orders_info as $item) {
-                        if($orders_info[0] == $item) {
+                        if($orders_info[0]->uid == $item->uid) {
                             continue;
                         } else {
                             return redirect()->back()->with('merge-error', 'Вы пытаетесь объединить заказы разных пользователей');
                         }
                    }
+                   //get single merged order
+                   $null_order = $orders_info->filter(function($item){
+                       return $item->ptype == null;
+                   });
+                   //if merge more then 1 order
+                   if(count($null_order) > 1) {
+                       return redirect()->back()->with('merge-error', 'Возможно объединить только с одним, уже ранее объединенным заказом');
+                   }
 
-                   $o_insertId = $this->order->create([
-                       'uid' => $orders_info[0],
-                       'cnum' => $cnum,
-                       'ptype' => NULL,
-                       'count' => $this->getOrderMergeCount($request->oid),
-                       'sid' => 5, //set status to merged
-                       'merged' => 0,
-                       'archived' => 0
-                   ]);
-
-                   foreach ($request->oid as $oid) {
-                       $cae = $this->order->where('id', $oid)->first(); //get CAE
-                       $this->m_order->create([
-                           'uid' => Auth::user()->id,
-                           'oid' => $oid,
-                           'tcae' => $cae->tcae,
-                           'mid' => $o_insertId->id,
+                   if($null_order->isEmpty()) { // if we merge single orders with status 2
+                       $o_insertId = $this->order->create([
+                           'uid' => $orders_info[0]->uid,
                            'cnum' => $cnum,
+                           'ptype' => NULL,
+                           'count' => $this->getOrderMergeCount($request->oid),
+                           'sid' => 5, //set status to merged
+                           'merged' => 0,
+                           'archived' => 0,
                        ]);
 
-                       $this->order->find($oid)->update(['merged' => 1]); // set as merged
+                       foreach ($request->oid as $oid) {
+                           $cae = $this->order->where('id', $oid)->first(); //get CAE
+                           $this->m_order->create([
+                               'uid' => Auth::user()->id,
+                               'oid' => $oid,
+                               'tcae' => $cae->tcae,
+                               'mid' => $o_insertId->id,
+                               'cnum' => $cnum,
+                           ]);
+
+                           $this->order->find($oid)->update(['merged' => 1]); // set as merged
+                       }
+                   } else {
+                       // get only single orders for merge
+                       $orders = $orders_info->filter(function($item){
+                           return $item->ptype != null;
+                       });
+                       //index starts 0
+                       $null_order = $null_order->values()->all();
+                       foreach ($orders as $oid) {
+                           $order = $this->order->where('id', $oid->id)->first();
+                           $this->m_order->create([
+                               'uid' => Auth::user()->id,
+                               'oid' => $oid->id,
+                               'tcae' => $order->tcae,
+                               'mid' => $null_order[0]->id,
+                               'cnum' => $null_order[0]->cnum,
+                           ]);
+
+                           $m = $this->order->find($null_order[0]->id);
+                           $m->update(['count' => $m->count + $order->count]); // update merged order count
+                           $this->order->find($oid->id)->update(['merged' => 1]); // set as merged
+                       }
                    }
 
                    return redirect()->back()->with('merge-success', 'Заказы были успешно объединены');

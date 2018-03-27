@@ -126,6 +126,6 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
     <script src="{{ asset('js/semantic.min.js') }}"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 </body>
 </html>
