@@ -77,6 +77,19 @@
                     <p class="category">Список товаров которые уже в резерве</p>
                 </div>
                 <hr/>
+                <form action="{{ route('reserve') }}" method="GET">
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" name="r" value="{{ app('request')->input('r') }}" placeholder="Наименование" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-success">Поиск</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <hr/>
                 @if(!$p_reserve->isEmpty())
                 <div class="content table-responsive table-full-width">
                     <table class="table table-responsive">

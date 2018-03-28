@@ -34,6 +34,8 @@ class ReserveController extends Controller
     {
         $tires = array();
         $t_count = 0;
+        $in_reserve = $this->reserve->pluck('tcae')->all();
+
         if(!empty($request->q)) {
             $tires = $this->tire->where('name', 'like', '%' . $request->q . '%')->paginate(25);
             $tires->each(function($item, $key) use ($tires) {
@@ -47,9 +49,11 @@ class ReserveController extends Controller
             $t_count =  $this->tire->where('name', 'like', '%' . $request->q . '%')->count();
         }
 
-        //get products from reserve
-        $in_reserve = $this->reserve->pluck('tcae')->all();
-        $p_reserve = $this->tire->whereIn('tcae', $in_reserve)->get();
+        if(!empty($request->r)) {
+            $p_reserve = $this->tire->whereIn('tcae', $in_reserve)->where('name', 'like', '%' . $request->r . '%')->get();
+        } else {
+            $p_reserve = $this->tire->whereIn('tcae', $in_reserve)->get();
+        }
 
         return view('admin.reserve.index', compact('tires', 't_count', 'p_reserve'));
     }
