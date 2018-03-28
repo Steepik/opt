@@ -81,22 +81,37 @@
             <div class="card">
                 <div class="content">
                     <div class="row">
-                        <div class="col-xs-5">
+                        <div class="col-xs-2">
                             <div class="icon-big icon-info text-center">
-                                <i class="ti-time"></i>
+                                <i class="ti-cup"></i>
                             </div>
                         </div>
-                        <div class="col-xs-7">
+                       {{-- <div class="col-xs-7">
                             <div class="numbers">
                                 <p>Ожидают проверку</p>
                                 <a href="{{ route('pcheck') }}">{{ count($s_wait) }}</a>
+                            </div>
+                        </div>--}}
+                        <div class="col-xs-10">
+                            <div class="numbers">
+                                <p>Топ 3 лидера</p>
+                                <ul class="list-group">
+                                @forelse($leaders as $leader)
+                                    <li class="text-left list-group-item" style="font-size:14px;">
+                                        <span class="badge">{{ number_format($leader['sum'], 0, '', ' ') }} &#8381;</span>
+                                        {{ $leader['legal_name'] }}
+                                    </li>
+                                @empty
+                                        Нет лидеров
+                                @endforelse
+                                </ul>
                             </div>
                         </div>
                     </div>
                     <div class="footer">
                         <hr />
                         <div class="stats">
-                            Пользователи ожидающие проверку товара
+                            Список лидеров по покупкам за текущий месяц
                         </div>
                     </div>
                 </div>

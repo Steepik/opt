@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Cart;
+use App\HistoryOrders;
 use App\Http\Controllers\Controller;
 use App\Mail\AccessGiven;
 use App\Mail\SendNotifyStatus;
@@ -25,14 +26,19 @@ class AdminController extends Controller
     public $user;
 
     /**
+     * @var HistoryOrders
+     */
+    public $history;
+    /**
      * AdminController constructor.
      * @param Order $order
      * @param User $user
      */
-    public function __construct(Order $order, User $user)
+    public function __construct(Order $order, User $user, HistoryOrders $history)
     {
         $this->order = $order;
         $this->user = $user;
+        $this->history = $history;
     }
 
     public function index()
@@ -42,8 +48,39 @@ class AdminController extends Controller
         $orders = $this->order->doneOrders()->get();
         $s_wait = $this->order->waitStatus()->get();
         $chart = $this->getDataForChart();
+        //get leaders
+        $info = collect();
+        foreach($this->user->all() as $user) {
+            $sum = 0;
+            //get orders for current month and year
+            $orders_list = $user->orders()
+                ->whereMonth('updated_at', date('m'))
+                ->whereYear('updated_at', date('Y'))
+                ->where('ptype', '!=', null)
+                ->where('sid', 6)
+                ->get();
 
-        return view('admin.dashboard', compact('users', 'access', 'orders', 's_wait', 'chart'));
+            foreach($orders_list as $order) {
+                $instance = Cart::getInstanceProductType($order->ptype);
+                $product = $instance->where('tcae', $order->tcae)->first();
+                if(! is_null($product)) {
+                    $sum += $product->price_opt * $order->count;
+                } else {
+                    $history = $this->history->where('oid', $order->id)->first();
+                    $sum += $history->price_opt * $order->count;
+                }
+            }
+            $info[] = [
+                'legal_name' => $user->legal_name,
+                'sum' => $sum,
+            ];
+            unset($sum);
+        }
+
+        $sorted = $info->where('sum', '>', 0)->sortByDesc('sum');
+        $leaders = $sorted->take(3);
+
+        return view('admin.dashboard', compact('users', 'access', 'orders', 's_wait', 'chart', 'leaders'));
     }
 
     public function userModeration()
