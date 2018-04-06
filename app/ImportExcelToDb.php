@@ -121,7 +121,7 @@ class ImportExcelToDb
                 'model_class' => $model_class,
                 'price_opt' => ($price_opt != 0) ? $price_opt : 0,
                 'price_roz' => ($price_roz != 0) ? $price_roz : 0,
-                'quantity' => $quantity
+                'quantity' => ($quantity == null) ? 0 : $quantity,
             ]);
     }
 
@@ -152,7 +152,7 @@ class ImportExcelToDb
                 'type' => $type,
                 'price_opt' => ($price_opt != 0) ? $price_opt : 0,
                 'price_roz' => ($price_roz != 0) ? $price_roz : 0,
-                'quantity' => $quantity
+                'quantity' => ($quantity == null) ? 0 : $quantity,
             ]);
     }
 }

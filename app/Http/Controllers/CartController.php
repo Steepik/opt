@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
-    public $total_total;
     public $total_count;
     public $products;
     public $id;
