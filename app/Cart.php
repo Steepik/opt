@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Collection;
 
 class Cart
 {
@@ -12,7 +12,7 @@ class Cart
      *
      *  return void
      */
-    final public static function clearCart()
+    final public static function clearCart(): void
     {
         $session = Session();
         $session->forget(['total_price', 'total_count', 'products', 'cart_products']);
@@ -39,5 +39,25 @@ class Cart
         }
 
         return $result;
+    }
+
+    /**
+     * Check if cart exist the same product then increase only count, not add new
+     *
+     * @param $product
+     * @return int|null
+     */
+    final public static function ExistTheSameProduct($product)
+    {
+        $session = Session();
+        $products = !empty($session->get('products')) ? $session->get('products') : [];
+        $is_exist = null;
+        foreach($products as $key => $item) {
+            if($product->tcae == $item['cae']) {
+                $is_exist = $key;
+            }
+        }
+
+        return $is_exist;
     }
 }

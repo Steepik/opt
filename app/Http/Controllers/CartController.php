@@ -12,9 +12,24 @@ use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
+    /**
+     * @var int
+     */
     public $total_count;
+
+    /**
+     * @var int
+     */
     public $products;
+
+    /**
+     * @var int
+     */
     public $id;
+
+    /**
+     * @var int
+     */
     public $count;
 
     public function index()
@@ -37,22 +52,32 @@ class CartController extends Controller
             $this->products = $request->product_id;
             $count = $request->count;
             if($request->count <= $p_quantity and $request->count > 0) {
-                //calculate total price, products count of all products in cart
-                if ($session->has('total_price')) {
-                    $this->total_price += $session->get('total_price');
-                }
-                if ($session->has('total_count')) {
-                    $this->total_count += $session->get('total_count');
-                }
+                //if user added the same product just increase count
+                if(Cart::ExistTheSameProduct($p_info) !== null) {
+                    $key = Cart::ExistTheSameProduct($p_info); //get product's key in array
+                    $products = $session->get('products');
+                    $products[$key]['count'] += $count;
 
-                $session->put('total_price', $this->total_price);
-                $session->put('total_count', $this->total_count);
-                $session->push('products', [
-                    'id' => md5(rand(0, 9999999)), 'pid' => $this->products, 'type' => $tire_type,
-                    'cae' => $p_info->tcae, 'count' => $count,
-                ]);
+                    Session::forget(['products']);
+                    Session::put('products', $products);
+                } else {
+                    //calculate total price, products count of all products in cart
+                    if ($session->has('total_price')) {
+                        $this->total_price += $session->get('total_price');
+                    }
+                    if ($session->has('total_count')) {
+                        $this->total_count += $session->get('total_count');
+                    }
 
-                $session->put('cart_products', count($session->get('products')));
+                    $session->put('total_price', $this->total_price);
+                    $session->put('total_count', $this->total_count);
+                    $session->push('products', [
+                        'id' => md5(rand(0, 9999999)), 'pid' => $this->products, 'type' => $tire_type,
+                        'cae' => $p_info->tcae, 'count' => $count,
+                    ]);
+
+                    $session->put('cart_products', count($session->get('products')));
+                }
             }
 
             return response()->json(['quantity' => $p_quantity, 'price' => $p_price, $session->get('products'), 'cart_products' => count($session->get('products'))]);
