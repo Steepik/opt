@@ -19,7 +19,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/semantic.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
     @yield('css')
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -40,14 +40,28 @@
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
-
+                    <a href="{{ route('home') }}"><button class="pull-left collapse-btn navbar-toggle"><i class="home icon colored"></i></button></a>
+                    <a href="{{ route('tires') }}" class="pull-left collapse-btn"><button class="navbar-toggle">Шины</button></a>
+                    <a href="{{ route('wheels') }}" class="pull-left collapse-btn"><button class="navbar-toggle">Диски</button></a>
                     <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+                   {{-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">--}}
+                        {{--<span class="sr-only">Toggle Navigation</span>--}}
+                        {{--<span class="icon-bar"></span>--}}
+                        {{--<span class="icon-bar"></span>--}}
+                        {{--<span class="icon-bar"></span>--}}
+                    {{--</button>--}}
+                    <a href="{{ route('cart') }}">
+                        <button class="navbar-toggle">
+                            <i class="shopping cart icon colored"></i>
+                            <span class="cart-products-count">
+                                         @if(Session::has('cart_products'))
+                                    {{ Session::get('cart_products') }} шт.
+                                @else
+                                    0 шт.
+                                @endif
+                                    </span>
+                        </button></a>
+                    <a href="{{ route('profile') }}"><button class="navbar-toggle"><i class="user icon colored"></i></button></a>
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
@@ -98,7 +112,7 @@
                                 </div>
                                 </a>
                             </li>
-                            <li class="dropdown">
+                            <li class="dropdown profile-btn">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                     <button class="ui blue button">{{ Auth::user()->name }} </button><span class="caret"></span>
                                 </a>
@@ -136,6 +150,5 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
     <script src="{{ asset('js/semantic.min.js') }}"></script>
-
 </body>
 </html>

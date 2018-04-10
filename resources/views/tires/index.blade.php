@@ -10,7 +10,7 @@
                         <div class="ui top attached tabular menu">
                             <a class="item active" data-tab="first">Легковые шины</a>
                             <a class="item" data-tab="second">Грузовые шины</a>
-                            <a class="item" data-tab="third">Спецтехника</a>
+                            {{--<a class="item" data-tab="third">Спецтехника</a>--}}
                         </div>
                         <div class="ui bottom attached tab segment active" data-tab="first">
                             <div class="ui form">
@@ -58,7 +58,6 @@
                                     </div>
                                     <hr/>
                                     <button class="ui blue button">Выполнить подбор</button>
-                                   {{ csrf_field() }}
                                 </form>
                             </div>
                         </div>
@@ -120,7 +119,6 @@
                                     </div>
                                     <hr/>
                                     <button class="ui blue button">Выполнить подбор</button>
-                                    {{ csrf_field() }}
                                 </form>
                             </div>
                         </div>
@@ -167,7 +165,6 @@
                                     </div>
                                     <hr/>
                                     <button class="ui blue button">Выполнить подбор</button>
-                                    {{ csrf_field() }}
                                 </form>
                             </div>
                         </div>

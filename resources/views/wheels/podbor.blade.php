@@ -57,14 +57,13 @@
                                     </div>
                                     <hr/>
                                     <button class="ui blue button">Выполнить подбор</button>
-                                    {{ csrf_field() }}
                                 </form>
                             </div>
                         </div>
                         <!-- result -->
                         @if(!$data->isEmpty())
-                            <div class="table-podbor">
-                                <table class="ui celled table">
+                            <div class="table-podbor table-responsive">
+                                <table class="table table-hover">
                                     <thead>
                                     <tr><th>Название</th>
                                         <th nowrap>Цена (Розница)</th>

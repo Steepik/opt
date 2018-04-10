@@ -6,7 +6,7 @@
             <div class="ui segment">
                 <p>Информация о заказе @if($products['sid'] == 2 or $products['sid'] == 5 and $products['sid'] != 4 and $products['sid'] != 6 and Auth::user()->payment_type == 0) <a href="/bill-m/{{ $products['oid'] }}" class="btn link">Печать Счета</a> @endif</p>
             </div>
-            <div class="ui secondary segment">
+            <div class="ui secondary segment" style="background: #fff;">
                 <div class="ui cards top-info">
                     <div class="card">
                         <div class="content">
@@ -76,7 +76,8 @@
                         </p>
                     </div>
                 @endif
-                <table id="cart" class="ui celled table">
+                <div class="table-responsive">
+                <table class="table table-hover">
                     <thead>
                     <tr>
                         <th>Товар</th>
@@ -125,6 +126,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                </div>
                 <table style="width:100%">
                     <tr>
                         <td class="text-right">Итого: {{ $total_price }}p</td>

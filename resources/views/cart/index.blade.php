@@ -12,9 +12,9 @@
                     </div>
                 </div>
             </div>
-            <div class="ui attached segment">
+            <div class="ui attached segment table-responsive">
                 @if(count($products) > 0)
-                    <table id="cart" class="ui selectable celled table">
+                    <table class="table table-hover">
                         <thead>
                         <tr>
                             <th>Товар</th>
@@ -31,7 +31,7 @@
                         @foreach($products as $product)
                             <tr align="center">
                                 <td>
-                                    <div class="col-sm-4">
+                                    <div class="col-xs-4 col-md-4">
                                         <div class="image-season">
                                             @if($product[0]->tseason == 'Зимняя')
                                                 <img src="https://torgshina.com/image/icons/winter.png" />
@@ -92,13 +92,13 @@
                         @endif
                         </tbody>
                     </table>
-                    <table style="width:100%">
+                    <table style="margin-top:1.3em; width:100%">
                         <tr>
                             <td>
                                 <a href="/" class="ui basic secondary button"><i class="cart icon"></i>Продолжить покупки</a>
                                 <a href="/make_order" class="ui basic positive button"><i class="payment icon"></i>Оформить заказ</a>
                             </td>
-                            <td class="text-center"><strong>Итого: {{ $total_price }}p</strong></td>
+                            <td class="text-right"><strong>Итого: {{ $total_price }}p</strong></td>
                         </tr>
                     </table>
                 @else

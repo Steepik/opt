@@ -493,3 +493,45 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
     max-width: 100% !important;
     height: auto;
 }
+/** RESPONSIVE **/
+@media screen and (min-width: 1024px) {
+    .table-responsive {
+        overflow-x: hidden;
+    }
+}
+@media (max-width: 768px) {
+    .navbar-brand img{
+        display: none;
+    }
+    div.bhoechie-tab-container {
+        display: none;
+    }
+    .nav.navbar-nav.navbar-left li {
+        display: inline-block;
+    }
+    .colored {
+        color: #fff;
+    }
+    .ui.labeled.button.cart-info, .dropdown.profile-btn {
+        display: none;
+    }
+    .pull-left.collapse-btn {
+        margin-left:15px;
+    }
+    .nav.navbar-nav.navbar-left {
+        display: none;
+    }
+    .navbar-header a {
+        color: #fff;
+    }
+    .cart-products-count {
+        font-size: 0.7em;
+        right:-10px;
+    }
+    .ui.card.profile {
+        margin-bottom: 1.3em !important;
+    }
+}
+table {
+    border-collapse: inherit !important;
+}

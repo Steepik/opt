@@ -6,11 +6,10 @@
             <div class="col-md-7 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">Подбор дисков</div>
-
                     <div class="panel-body">
                         <div class="ui bottom attached tab segment active" data-tab="first">
                             <div class="ui form">
-                                <form action="{{ route('podbor_wheels') }}" method="GET">
+                                <form action="{{ route('podbor_wheels') }}" method="GET" class="wheel-form">
                                     <input type="hidden" name="type" value="4">
                                     <div class="fields">
                                         <div class="field">
@@ -57,7 +56,6 @@
                                     </div>
                                     <hr/>
                                     <button class="ui blue button">Выполнить подбор</button>
-                                    {{ csrf_field() }}
                                 </form>
                             </div>
                         </div>

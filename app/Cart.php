@@ -2,8 +2,6 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Collection;
-
 class Cart
 {
 
@@ -42,7 +40,7 @@ class Cart
     }
 
     /**
-     * Check if cart exist the same product then increase only count, not add new
+     * Check if cart has the same product and return product's key in array
      *
      * @param $product
      * @return int|null

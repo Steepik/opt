@@ -1,6 +1,9 @@
 $(document).ready(function(){
     $('.menu .item').tab();
 
+    $('.ui.dropdown')
+        .dropdown();
+
     // Get the modal
     var modal = $('#myModal');
 
@@ -87,23 +90,23 @@ $(document).ready(function(){
         }
     });
 
-    $('#btn_del_prod').click(function(){
+    $('.btn_del_prod').click(function(){
         $('#action_btn').val('delete');
         $('.form-action-prod').submit();
     });
-    $('#btn_cancel_prod').click(function(){
+    $('.btn_cancel_prod').click(function(){
         $('#action_btn').val('cancel');
         $('.form-action-prod').submit();
     });
-    $('#btn_merge_prod').click(function(){
+    $('.btn_merge_prod').click(function(){
         $('#action_btn').val('merge');
         $('.form-action-prod').submit();
     });
-    $('#btn_ready_prod').click(function(){
+    $('.btn_ready_prod').click(function(){
         $('#action_btn').val('ready');
         $('.form-action-prod').submit();
     });
-    $('#btn_archive_prod').click(function(){
+    $('.btn_archive_prod').click(function(){
         $('#action_btn').val('archive');
         $('.form-action-prod').submit();
     });

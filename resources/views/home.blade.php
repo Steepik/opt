@@ -70,7 +70,6 @@
                                     </div>
                                 </div>
                                 <button class="ui blue button">Выполнить подбор</button>
-                                {{ csrf_field() }}
                             </form>
                         </div>
                     </div>
@@ -131,7 +130,6 @@
                                     </div>
                                 </div>
                                 <button class="ui blue button">Выполнить подбор</button>
-                                {{ csrf_field() }}
                             </form>
                         </div>
                     </div>
@@ -177,7 +175,6 @@
                                     </div>
                                 </div>
                                 <button class="ui blue button">Выполнить подбор</button>
-                                {{ csrf_field() }}
                             </form>
                         </div>
                     </div>
@@ -231,7 +228,6 @@
                                 </div>
                             </div>
                             <button class="ui blue button">Выполнить подбор</button>
-                            {{ csrf_field() }}
                         </form>
                     </div>
                 </div>
@@ -352,16 +348,16 @@
                         </form>
                         <hr/>
                     @if($list)
-                            <form action="{{ route('prod_action') }}" method="POST" class="form-action-prod">
-                            <table id="cart" class="ui celled table">
+                            <form action="{{ route('prod_action') }}" method="POST" class="table-responsive form-action-prod">
+                            <table class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th style="text-align: center;"><div class="ui checkbox checkAllBox"><input type="checkbox"><label></label></div></th>
-                                    <th>Номер</th>
-                                    <th>Создано</th>
-                                    <th nowrap>Кол-во</th>
+                                    <th style="text-align: center;">Номер</th>
+                                    <th style="text-align: center;">Создано</th>
+                                    <th style="text-align: center;" nowrap>Кол-во</th>
                                     <th class="text-center">Итого</th>
-                                    <th>Статус</th>
+                                    <th style="text-align: center;">Статус</th>
                                 </tr>
                                 </thead>
                                 <tbody class="tbody-cart">
@@ -474,11 +470,42 @@
                                 <td class="text-right">Итого: {{ $total_price }}p</td>
                             </tr>
                         </table>
-                        <button class="ui button green basic" id="btn_ready_prod">К отгрузке</button>
-                        <button class="ui red basic button" id="btn_cancel_prod">Отменить заказ</button>
-                        <button class="ui button blue basic" id="btn_merge_prod">Объединить</button>
-                        <button class="ui button brown basic" id="btn_archive_prod">В архив</button>
-                        <button class="ui button black basic" id="btn_del_prod">Удалить</button>
+                        <br/>
+                        <div class="col-md-12 hidden-xs">
+                            <button class="ui button green basic btn_ready_prod">К отгрузке</button>
+                            <button class="ui red basic button btn_cancel_prod">Отменить заказ</button>
+                            <button class="ui button blue basic btn_merge_prod">Объединить</button>
+                            <button class="ui button brown basic btn_archive_prod">В архив</button>
+                            <button class="ui button black basic btn_del_prod">Удалить</button>
+                        </div>
+                            <div class="ui floating labeled bottom icon dropdown pointing button visible-xs">
+                                <i class="check circle icon"></i>
+                                <span class="text">Действия с отмеченными</span>
+                                <div class="menu">
+                                    <div class="header">Список действий</div>
+                                    <div class="divider"></div>
+                                    <div class="item btn_ready_prod">
+                                        <span class="description"></span>
+                                        <span class="text"><i class="truck icon"></i> К отгрузке</span>
+                                    </div>
+                                    <div class="item btn_cancel_prod">
+                                        <span class="description"></span>
+                                        <span class="text"><i class="ban icon"></i> Отменить заказ</span>
+                                    </div>
+                                    <div class="item btn_merge_prod">
+                                        <span class="description"></span>
+                                        <span class="text"><i class="sitemap icon"></i> Объединить</span>
+                                    </div>
+                                    <div class="item btn_archive_prod">
+                                        <span class="description"></span>
+                                        <span class="text"><i class="archive icon"></i> В архив</span>
+                                    </div>
+                                    <div class="item btn_del_prod">
+                                        <span class="description"></span>
+                                        <span class="text"><i class="trash alternate icon"></i> Удалить</span>
+                                    </div>
+                                </div>
+                            </div>
                     @else
                             <div class="ui large message atc-error">
                                 <p><i class="icon unordered list"></i> Список заказов пуст

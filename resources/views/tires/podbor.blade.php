@@ -11,7 +11,7 @@
                         <div class="ui top attached tabular menu">
                             <a class="item @if($filter_type == 1) active @endif" data-tab="first">Легковые шины</a>
                             <a class="item @if($filter_type == 2) active @endif" data-tab="second">Грузовые шины</a>
-                            <a class="item @if($filter_type == 3) active @endif" data-tab="third">Спецтехника</a>
+                            {{--<a class="item @if($filter_type == 3) active @endif" data-tab="third">Спецтехника</a>--}}
                         </div>
                         <div class="ui bottom attached tab segment @if($filter_type == 1) active @endif" data-tab="first">
                             <div class="ui form">
@@ -59,7 +59,7 @@
                                     </div>
                                     <hr/>
                                     <button class="ui blue button">Выполнить подбор</button>
-                                    {{ csrf_field() }}
+
                                 </form>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                                     </div>
                                     <hr/>
                                     <button class="ui blue button">Выполнить подбор</button>
-                                    {{ csrf_field() }}
+
                                 </form>
                             </div>
                         </div>
@@ -168,14 +168,14 @@
                                     </div>
                                     <hr/>
                                     <button class="ui blue button">Выполнить подбор</button>
-                                    {{ csrf_field() }}
+
                                 </form>
                             </div>
                         </div>
                         <!-- result -->
                         @if(!$data->isEmpty())
-                        <div class="table-podbor">
-                            <table class="ui celled table">
+                        <div class="table-podbor table-responsive">
+                            <table class="table table-hover">
                                 <thead class="center aligned">
                                 <tr><th >Название</th>
                                     <th nowrap>Цена (Розница)</th>
@@ -228,7 +228,7 @@
                                         @endif
                                     </td>
                                     <td class="center aligned">
-                                        <form onsubmit="return false;" method="psot" action="{{ route('addtocart') }}" class="form-add-to-cart">
+                                        <form onsubmit="return false;" method="post" action="{{ route('addtocart') }}" class="form-add-to-cart">
                                         <div class="ui action input">
                                             <input type="number" min="1" name="count" class="count-field" id="count" placeholder="Количество">
                                             <button class="ui teal right labeled icon button add-to-cart">

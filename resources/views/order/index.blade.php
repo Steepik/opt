@@ -67,7 +67,8 @@
                 <div class="ui horizontal divider">
                     Товар
                 </div>
-                <table id="cart" class="ui celled table">
+                <div class="table-responsive">
+                <table class="table table-striped">
                     <thead>
                     <tr>
                         <th>Товар</th>
@@ -114,6 +115,7 @@
                             <?php $total_price += ($products->price_opt * $products->count); ?>
                     </tbody>
                 </table>
+                </div>
                 <table style="width:100%">
                     <tr>
                         <td class="text-right">Итого: {{ $total_price }}p</td>
