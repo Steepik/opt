@@ -29,6 +29,7 @@ class AdminController extends Controller
      * @var HistoryOrders
      */
     public $history;
+    
     /**
      * AdminController constructor.
      * @param Order $order
