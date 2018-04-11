@@ -13,6 +13,7 @@ use App\Special;
 use App\Wheel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use NumberToWords\NumberToWords;
 use App\OrderMerges;
@@ -77,7 +78,7 @@ class OrderController extends Controller
                             //delete order
                             $this->order->destroy($order->id);
                             $this->h_order->where('oid', $order->id)->delete();
-                            return redirect(route('home'))->with('info-msg', 'После обновления базы товаров, заказ №' . $order->cnum . ' был удален, так как товара нет в наличии.');
+                            return redirect(route('home'))->with('info-msg', Lang::get('messages.p_deleted', ['num' => $order->cnum]));
                         }
                     }
                 }
@@ -115,7 +116,7 @@ class OrderController extends Controller
                 $products['comments'] = $order->comments()->where('oid', $id)->orderBy('created_at', 'ASC')->get();
             } else {
                 $this->destroy($id);
-                return redirect(route('home'))->with('info-msg', 'После обновления базы товаров, заказ №' . $order->cnum . ' был удален, так как товара нет в наличии.');
+                return redirect(route('home'))->with('info-msg', Lang::get('messages.p_deleted', ['num' => $order->cnum]));
                 }
         } elseif($order and $m_products->count() < 2) {
             $single_order = $this->m_order->where('cnum', $order->cnum)->first();
@@ -126,7 +127,7 @@ class OrderController extends Controller
 
             return redirect(route('home'));
         } else {
-            return redirect(route('home'))->with('info-msg', 'После обновления базы товаров, заказ №' . $order->cnum . ' был удален, так как товара нет в наличии.');
+            return redirect(route('home'))->with('info-msg', Lang::get('messages.p_deleted', ['num' => $order->cnum]));
         }
 
         return view('order.merged', compact('products'));
@@ -233,7 +234,7 @@ class OrderController extends Controller
 
                             $this->order->destroy($order->id);
                             $this->h_order->where('oid', $order->id)->delete();
-                            Session::flash('info-msg',  'После обновления базы товаров, ' . $history->name . ' был удален из заказа, так как товара нет в наличии.');
+                            Session::flash('info-msg',  Lang::get('messages.p_deleted_name', ['name' => $history->name]));
                         }
                     }
                 }

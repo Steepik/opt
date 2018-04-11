@@ -139,10 +139,10 @@
                             <td align="left">
                                 шт.
                             </td>
-                            <td align="right">
+                            <td align="right" nowrap>
                                 {{ number_format($item->price_opt, 0, ',', ' ') }}
                             </td>
-                            <td align="right">
+                            <td align="right" nowrap>
                                 {{ number_format($item->price_opt * $item->count, 0, ',', ' ') }}
                             </td>
                         </tr>

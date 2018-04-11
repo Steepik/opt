@@ -8,6 +8,7 @@ use App\HistoryOrders;
 use App\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
@@ -117,7 +118,7 @@ class CartController extends Controller
         }
         Cart::clearCart();
         //Notify admin about new order
-        PusherNotify::dispatch(Auth::user()->legal_name . ', совершил новый заказ!');
+        PusherNotify::dispatch(Lang::get('messages.new_order', ['name' => Auth::user()->legal_name]));
 
         return redirect('/');
     }

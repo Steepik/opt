@@ -54,6 +54,7 @@
                                             <option value="spike">Зимние шипованные</option>
                                             <option value="Всесезонная">Всесезонная</option>
                                         </select>
+
                                     </div>
                                     <div class="field select">
                                         <label>Производитель</label>

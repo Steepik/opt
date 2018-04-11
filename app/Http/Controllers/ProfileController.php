@@ -8,6 +8,7 @@ use App\Http\Requests\ProfilePasswordRequest;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Lang;
 
 class ProfileController extends Controller
 {
@@ -53,7 +54,7 @@ class ProfileController extends Controller
 
         //if old password doesn't match
         if(!$check) {
-            return redirect()->back()->withErrors('Старый пароль не верен');
+            return redirect()->back()->withErrors(Lang::get('messages.old_wrong_password'));
         }
 
         //if all is good

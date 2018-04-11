@@ -15,6 +15,7 @@ use App\Wheel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -86,7 +87,7 @@ class HomeController extends Controller
                         $order->destroy($order->id);
                         $this->h_order->where('oid', $order->id)->delete();
 
-                        return redirect(route('home'))->with('info-msg', 'После обновления базы товаров, заказ №' . $order->cnum . ' был удален, так как товара нет в наличии.');
+                        return redirect(route('home'))->with('info-msg', Lang::get('messages.p_deleted', ['num' => $order->cnum]));
                     }
                 }
             } elseif($order->ptype == null) {
@@ -134,7 +135,7 @@ class HomeController extends Controller
                         }
                         $ids[] = (int)$oid; // add common merged order's id to delete
                     } else {
-                        $this->error = 'Запрещены действия с заказами пока водитель в пути';
+                        $this->error = Lang::get('messages.driver_omw');
                     }
                     //delete order history
                     $this->h_order->whereIn('oid', $ids)->delete();
@@ -148,9 +149,9 @@ class HomeController extends Controller
                         if ($item->sid != 1 and $item->sid != 7 and $item->sid != 6 and $item->sid != 4) {
                             $this->order->where('id', $item->id)->update(['sid' => 3]); // 3 = order canceled
                         } elseif($item->sid == 4) {
-                            $this->error = 'Запрещены действия с заказами пока водитель в пути';
+                            $this->error = Lang::get('messages.driver_omw');
                         }else {
-                            $this->error = 'Заказы у которых статус "Ожидается проверка, Завершён или Отменён модератором" подлежать только удалению';
+                            $this->error = Lang::get('messages.spec_action');
                         }
                     }
 
@@ -168,9 +169,9 @@ class HomeController extends Controller
                         if($item->sid != 1 and $item->sid != 7 and $item->sid != 6 and $item->sid != 4) {
                             $this->order->where('id', $item->id)->update(['sid' => 2, 'archived' => 0]); // 2 = order ready to go waiting for pay
                         } elseif($item->sid == 4) {
-                           $this->error = 'Запрещены действия с заказами пока водитель в пути';
+                           $this->error = Lang::get('messages.driver_omw');
                         }else {
-                            $this->error = 'Заказы у которых статус "Ожидается проверка, Завершён или Отменён модератором" подлежать только удалению';
+                            $this->error = Lang::get('messages.spec_action');
                         }
                     }
                 }
@@ -178,7 +179,6 @@ class HomeController extends Controller
                 return redirect(route('home'))->with('status-error', $this->error);
             } elseif ($request->action == 'merge') {
                 if($this->checkStatus($request->oid) and count($request->oid) > 1) {
-                    $merge = new OrderMerges();
                     $cnum = $this->unique_cnum();
 
                     $o_insertId = $this->order->create([
@@ -191,21 +191,21 @@ class HomeController extends Controller
                         'archived' => 0
                     ]);
                     foreach ($request->oid as $oid) {
-                        $cae = Auth::user()->orders()->where('id', $oid)->first(); //get CAE
+                        $o_info = Auth::user()->orders()->where('id', $oid)->first();
 
-                        $merge->create([
+                        $this->m_order->create([
                             'uid' => Auth::user()->id,
                             'oid' => $oid,
-                            'tcae' => $cae->tcae,
+                            'tcae' => $o_info->tcae,
                             'mid' => $o_insertId->id,
                             'cnum' => $cnum,
                         ]);
                         $this->order->find($oid)->update(['merged' => 1]); // set as merged
                     }
                 } elseif(!$this->checkStatus($request->oid) and count($request->oid) > 1) {
-                    return redirect(route('home'))->with('status-error', 'Статус всех выбранных заказов должен быть: "Готов к  отгрузке, ожидается оплата"');
+                    return redirect(route('home'))->with('status-error', Lang::get('messages.status_must_be'));
                 } elseif(count($request->oid) < 2) {
-                    return redirect(route('home'))->with('status-error', 'Количество объединяемых заказов должно быть минимум 2');
+                    return redirect(route('home'))->with('status-error', Lang::get('messages.merge_min'));
                 }
             } elseif ($request->action == 'archive') {
                 $order = $this->order->whereIn('id', $request->oid)->get();
@@ -213,7 +213,7 @@ class HomeController extends Controller
                     if($item->sid != 4) {
                         $this->order->where('id', $item->id)->update(['archived' => 1]); // archived
                     } else {
-                        $this->error = 'Запрещены действия с заказами пока водитель в пути';
+                        $this->error = Lang::get('messages.driver_omw');
                     }
                 }
 

@@ -18,4 +18,9 @@
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    #WWW redirect
+    RewriteEngine On
+    RewriteCond %{HTTP_HOST} ^www.opt.torgshina.com$ [NC]
+    RewriteRule ^(.*)$ https://opt.torgshina.com/$1 [R=301,L]
 </IfModule>
