@@ -50,7 +50,7 @@
                 <li class="{{ request()->route()->getName() == 'control' ? 'active' : '' }}">
                     <a href="{{ route('control') }}">
                         <i class="ti-panel"></i>
-                        <p>Панель управления</p>
+                        <p>Сводка</p>
                     </a>
                 </li>
                 <li class="{{ request()->route()->getName() == 'buyers' ? 'active' : '' }}">
