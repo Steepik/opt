@@ -61,6 +61,7 @@ class OrderController extends Controller
     {
         $sql = array('merged' => 0);
         $uid = array();
+        $appends = $request->all();
 
         if(!empty($request->num)) {
             $arr = ['cnum' => $request->num];
@@ -94,7 +95,7 @@ class OrderController extends Controller
         }
 
         $status_list = StatusText::all();
-        return view('admin.list.orders', compact('orders', 'status_list'));
+        return view('admin.list.orders', compact('orders', 'status_list', 'appends'));
     }
 
     public function showMergeOrder($id)

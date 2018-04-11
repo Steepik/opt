@@ -244,7 +244,7 @@
                     </div>
                 @endif
             </div>
-            {{ $orders->render() }}
+            {{ $orders->appends($appends)->links() }}
         </div>
     </div>
 
