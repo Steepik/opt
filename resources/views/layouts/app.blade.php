@@ -128,7 +128,9 @@
                             <i class="user icon"></i>
                             <span>{{ Auth::user()->name }}</span>
                             <div class="menu">
+                                @admin
                                 <a href="{{ route('control') }}" class="item"> <i class="cogs icon"></i> Панель управления</a>
+                                @endadmin
                                 <a href="/excel-download" class="item"> <i class="file excel outline icon"></i> Выгрузки</a>
                                 <a href="{{ route('logout') }}" class="item"
                                    onclick="event.preventDefault();
