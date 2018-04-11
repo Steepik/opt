@@ -49,7 +49,7 @@
             <ul class="nav">
                 <li class="{{ request()->route()->getName() == 'control' ? 'active' : '' }}">
                     <a href="{{ route('control') }}">
-                        <i class="ti-panel"></i>
+                        <i class="ti-bar-chart-alt"></i>
                         <p>Сводка</p>
                     </a>
                 </li>
