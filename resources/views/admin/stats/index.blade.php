@@ -38,15 +38,40 @@
                         </div>
                         <div class="col-xs-7">
                             <div class="numbers">
-                                <p>Итого</p>
-                                {{ $orders_sum }}
+                                <p>Итого за месяц</p>
+                                {{ $sumByMonth }}
                             </div>
                         </div>
                     </div>
                     <div class="footer">
                         <hr />
                         <div class="stats">
-                            Общая сумма всех покупок за все время
+                            Сумма за текущий месяц
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-success text-center">
+                                <i class="ti-money"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Итого за год</p>
+                                {{ $sumByYear }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr />
+                        <div class="stats">
+                            Сумма покупок за {{ date('Y') }} год
                         </div>
                     </div>
                 </div>
