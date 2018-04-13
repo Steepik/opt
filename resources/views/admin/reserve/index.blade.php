@@ -124,6 +124,7 @@
                         <p>Пусто</p>
                     </div>
                 @endif
+                <div style="text-align: center">{{ $p_reserve->appends($appends)->links() }}</div>
             </div>
         </div>
     </div>

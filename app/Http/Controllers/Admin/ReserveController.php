@@ -34,28 +34,27 @@ class ReserveController extends Controller
     {
         $tires = array();
         $t_count = 0;
+        $appends = $request->all();
+
         $in_reserve = $this->reserve->pluck('tcae')->all();
 
         if(!empty($request->q)) {
-            $tires = $this->tire->where('name', 'like', '%' . $request->q . '%')->paginate(25);
-            $tires->each(function($item, $key) use ($tires) {
-               $reserved = $this->reserve->where('tcae', $item->tcae)->first();
-               if(! is_null($reserved)) {
-                   $item['reserved'] = true;
-                   $tires->forget($key); // delete reserved product from collection
-               }
-            });
+            $tires = $this->tire->whereNotIn('tcae', $in_reserve)
+                ->where('name', 'like', '%' . $request->q . '%')
+                ->paginate(25);
 
-            $t_count =  $this->tire->where('name', 'like', '%' . $request->q . '%')->count();
+            $t_count = $this->tire->whereNotIn('tcae', $in_reserve)
+                ->where('name', 'like', '%' . $request->q . '%')
+                ->count();
         }
 
         if(!empty($request->r)) {
-            $p_reserve = $this->tire->whereIn('tcae', $in_reserve)->where('name', 'like', '%' . $request->r . '%')->get();
+            $p_reserve = $this->tire->whereIn('tcae', $in_reserve)->where('name', 'like', '%' . $request->r . '%')->paginate(10);
         } else {
-            $p_reserve = $this->tire->whereIn('tcae', $in_reserve)->get();
+            $p_reserve = $this->tire->whereIn('tcae', $in_reserve)->paginate(10);
         }
 
-        return view('admin.reserve.index', compact('tires', 't_count', 'p_reserve'));
+        return view('admin.reserve.index', compact('tires', 't_count', 'p_reserve', 'appends'));
     }
 
     public function addToReserve(Request $request)
