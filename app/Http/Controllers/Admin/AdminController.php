@@ -53,6 +53,7 @@ class AdminController extends Controller
         $info = collect();
         foreach($this->user->all() as $user) {
             $sum = 0;
+
             //get orders for current month and year
             $orders_list = $user->orders()
                 ->whereMonth('updated_at', date('m'))
@@ -63,7 +64,9 @@ class AdminController extends Controller
 
             foreach($orders_list as $order) {
                 $instance = Cart::getInstanceProductType($order->ptype);
+
                 $product = $instance->where('tcae', $order->tcae)->first();
+
                 if(! is_null($product)) {
                     $sum += $product->price_opt * $order->count;
                 } else {
@@ -71,14 +74,17 @@ class AdminController extends Controller
                     $sum += $history->price_opt * $order->count;
                 }
             }
+
             $info[] = [
                 'legal_name' => $user->legal_name,
                 'sum' => $sum,
             ];
+
             unset($sum);
         }
 
         $sorted = $info->where('sum', '>', 0)->sortByDesc('sum');
+
         $leaders = $sorted->take(3);
 
         return view('admin.dashboard', compact('users', 'access', 'orders', 's_wait', 'chart', 'leaders'));
@@ -87,6 +93,7 @@ class AdminController extends Controller
     public function userModeration()
     {
         $users = $this->user->hasAccess(0)->get();
+
         return view('admin.list.moder', compact('users'));
     }
 
@@ -133,12 +140,14 @@ class AdminController extends Controller
     public function productModeration()
     {
         $orders = $this->order->waitStatus()->get();
+
         foreach($orders as $key => $order) {
             $data = Cart::getInstanceProductType($order->ptype);
             $result = $data->where('tcae', $order->tcae)->first();
             $orders[$key]['pname'] = $result->name;
             $orders[$key]['price'] = $result->price_opt;
         }
+
         return view('admin.list.pcheck', compact('orders'));
     }
 
@@ -175,7 +184,9 @@ class AdminController extends Controller
     public function getDataForChart()
     {
         $month = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12); //num list of month
+
         $data = array();
+
         foreach($month as $m) {
             $data[] = $this->order->whereYear('updated_at', date('Y'))
                 ->whereMonth('updated_at', '=', $m)
@@ -184,6 +195,7 @@ class AdminController extends Controller
                 ->get()
                 ->count();
         }
+
         return json_encode(array_values($data));
     }
 }
