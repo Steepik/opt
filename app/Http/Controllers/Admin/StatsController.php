@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Cart;
-use App\Exceptions\Handler;
 use App\HistoryOrders;
 use App\Http\Controllers\Controller;
 use App\Order;
 use App\User;
-use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Redis;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class StatsController extends Controller
 {
