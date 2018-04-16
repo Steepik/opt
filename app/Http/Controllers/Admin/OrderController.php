@@ -369,4 +369,46 @@ class OrderController extends Controller
             $this->unique_cnum(); // do recursion, generate new number if cnum already taken
         }
     }
+
+    public function AjaxChangeOrderCount(Request $request)
+    {
+        if($request->ajax()) {
+            $pTypeIsNull = 0;
+
+            $this->order->where('cnum', $request->cnum)->update(['count' => $request->value]);
+            //get new data
+            $order = $this->order->where('cnum', $request->cnum)->first();
+
+            if(! is_null($order->ptype)) {
+                $instance = Cart::getInstanceProductType($order->ptype);
+
+                $product = $instance->where('tcae', $order->tcae)->first();
+            } else {
+                $orderInfo = $this->m_order->where('cnum', $request->cnum)->where('tcae', $request->tcae)->first();
+                $specOrder = $this->order->find($orderInfo->oid);
+                $specOrder->count = $request->value;
+                $specOrder->save();
+
+                //get total count of merged order
+                $getMergedOrders = $this->m_order->where('cnum', $request->cnum)->get();
+                $totalCount = 0;
+                foreach ($getMergedOrders as $mergeOrder) {
+                    $singleOrder = $this->order->find($mergeOrder->oid);
+                    $totalCount += $singleOrder->count;
+                }
+
+                $this->order->where('cnum', $request->cnum)->update(['count' => $totalCount]);
+
+                $specInstance = Cart::getInstanceProductType($specOrder->ptype);
+                $product = $specInstance->where('tcae', $specOrder->tcae)->first();
+
+                $pTypeIsNull = 1;
+            }
+
+            return response()->json([
+                'price_opt' => $product->price_opt,
+                'type' => $pTypeIsNull,
+            ]);
+        }
+    }
 }

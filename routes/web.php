@@ -85,6 +85,7 @@ Route::middleware(['auth', 'is_admin'])->group(function(){
     Route::post('control/reserve/add/', 'Admin\ReserveController@addToReserve')->name('reserve-add');
     Route::post('control/reserve/delete/', 'Admin\ReserveController@deleteFromReserve')->name('reserve-delete');
     Route::post('control/order_action', 'Admin\OrderController@orderAction')->name('orders_action');
+    Route::post('control/changeOrderCount', 'Admin\OrderController@AjaxChangeOrderCount');
 });
 
 // *** AUTOPITER PRICE-LIST ***//

@@ -36,8 +36,8 @@
                 </div>
                 <hr/>
                 <div class="content">
-                    <span>Общее кол-во: {{ $order->count }}</span><br/>
-                    <span>Сумма: {{ number_format($total_sum, 0, ',', ' ') }}p</span><br/>
+                    <span>Общее кол-во:  <span class="order-total-count">{{ $order->count }}</span></span><br/>
+                    <span>Сумма: <span class="order-total-sum-top">{{ number_format($total_sum, 0, ',', ' ') }}</span>p</span><br/>
                     <span>Вид отгрузки: Самовывоз</span><br/>
                     <span>Контактное лицо: {{ $order->user->name }}</span><br/>
                     <span>Телефон: {{ $order->user->phone }}</span><br/>
@@ -85,9 +85,11 @@
                                 </td>
                                 <td>{{ $product->brand->name }}</td>
                                 <td>{{ number_format($product->price_roz, 0, ',', ' ') }}p</td>
-                                <td>{{  number_format($product->price_opt, 0, ',', ' ') }}p</td>
-                                <td>{{ $product->count }}</td>
-                                <td data-th="Subtotal" class="text-center">{{ number_format($product->price_opt * $product->count, 0, ',', ' ') }}p</td>
+                                <td class="order-price-opt">{{  number_format($product->price_opt, 0, ',', ' ') }}p</td>
+                                <td class="order-item-count" style="cursor: pointer">{{ $product->count }}</td>
+                                <td data-th="Subtotal" class="text-center"><span class="order-total-sum">{{ number_format($product->price_opt * $product->count, 0, ',', ' ') }}</span>p</td>
+                                <input type="hidden" class="order-cnum" value="{{ $order->cnum }}">
+                                <input type="hidden" class="product-tcae" value="{{ $product->tcae }}">
                             </tr>
                         @endforeach
                         </tbody>
