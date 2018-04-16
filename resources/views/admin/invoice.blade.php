@@ -111,7 +111,8 @@
     <div class="left-post">
         <span>Покупатель:</span>
     </div>
-    <span class="text">{{ $order->user->legal_name }}</span>
+    <span class="text">{{ $order->user->legal_name }}, ИНН {{ $order->user->inn }}, <br/>
+        {{ $order->user->city }}, {{ $order->user->street }}, {{ $order->user->house }}</span>
     </div>
     <table>
         <tbody><tr>
