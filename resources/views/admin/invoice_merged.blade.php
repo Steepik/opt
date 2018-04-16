@@ -112,7 +112,14 @@
             <span>Покупатель:</span>
         </div>
         <span class="text">{{ $order->user->legal_name }}, ИНН {{ $order->user->inn }}, <br/>
-            г. {{ $order->user->city }}, {{ $order->user->street }}, {{ $order->user->house }}</span>
+            г. {{ $order->user->city }}
+            @if(! empty($order->user->street))
+                , {{ $order->user->street }}
+            @endif
+            @if(! empty($order->user->house))
+                , {{ $order->user->house }}
+            @endif
+        </span>
     </div>
     <table>
         <tbody><tr>
