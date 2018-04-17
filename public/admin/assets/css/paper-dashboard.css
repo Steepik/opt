@@ -2847,5 +2847,8 @@ textarea.form-control {
 }
 .ui.checkbox.orders .second-icon.fa.fa-check-square.fa-base {
   color: #dd0000;
-;
+}
+.order-item-count:hover {
+  font-size:20px;
+  background-color: rgba(122, 194, 154, 0.3);
 }

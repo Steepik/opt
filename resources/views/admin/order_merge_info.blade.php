@@ -58,6 +58,7 @@
                             <th class="text-center" >Цена(Оптом)</th>
                             <th class="text-center" nowrap>Кол-во</th>
                             <th class="text-center">Итого</th>
+                            <th class="text-center">Действия</th>
                         </tr>
                         </thead>
                         <tbody class="tbody-cart">
@@ -88,10 +89,11 @@
                                 <td class="order-price-opt">{{  number_format($product->price_opt, 0, ',', ' ') }}p</td>
                                 <td class="order-item-count" style="cursor: pointer">{{ $product->count }}</td>
                                 <td data-th="Subtotal" class="text-center"><span class="order-total-sum">{{ number_format($product->price_opt * $product->count, 0, ',', ' ') }}</span>p</td>
-                                <input type="hidden" class="order-cnum" value="{{ $order->cnum }}">
+                                <td><button class="merged-btn-del btn btn-fill btn-danger">Удалить</button></td>
                                 <input type="hidden" class="product-tcae" value="{{ $product->tcae }}">
                             </tr>
                         @endforeach
+                        <input type="hidden" class="order-cnum" value="{{ $order->cnum }}">
                         </tbody>
                     </table>
                 </div>

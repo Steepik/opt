@@ -52,7 +52,7 @@ $( document ).ready(function() {
             .then((value) => {
                 if($.isNumeric(value) ) {
                     var _token = $("meta[name=csrf-token]").attr('content');
-                    var cnum = $( this ).parent().find('.order-cnum').val();
+                    var cnum = $('.order-cnum').val();
                     var tcae = $( this ).parent().find('.product-tcae').val();
 
                     $.ajax({
@@ -87,6 +87,47 @@ $( document ).ready(function() {
                         });
                 } else {
                     swal("Введите число", "Вы ввели буквы или другие знаки", "warning");
+                }
+            });
+    });
+
+    //delete position from merged order
+    $('.merged-btn-del').on('click', function(){
+        var pName = $( this ).parent().parent().find('.order-product-name-inside').text();
+        var _token = $("meta[name=csrf-token]").attr('content');
+        var cnum = $('.order-cnum').val();
+        var tcae = $( this ).parent().parent().find('.product-tcae').val();
+
+        swal({
+            title: pName,
+            text: "",
+            icon: "warning",
+            buttons:  ["Отмена", "Удалить"],
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        method: 'POST',
+                        url: "/control/delOrderInMerged",
+                        data: {_token:_token, cnum:cnum, tcae:tcae},
+                    })
+                        .done(function (data) {
+                            if(data.success == true) {
+                                swal("Позиция была успешно удалена", {
+                                    icon: "success",
+                                });
+
+                                setTimeout(function(){ location.reload(true) }, 1000);
+                            } else {
+                                swal("Что-то пошло не так", {
+                                    title: "Ошибка удаления",
+                                    icon: "warning",
+                                });
+                            }
+                        });
+                } else {
+                    swal.close();
                 }
             });
     });

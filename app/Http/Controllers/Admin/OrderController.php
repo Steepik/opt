@@ -411,4 +411,25 @@ class OrderController extends Controller
             ]);
         }
     }
+
+    public function ajaxDeletePositionFromMergedOrder(Request $request)
+    {
+        if($request->ajax()) {
+            $orderCnum = $this->m_order->where('cnum', $request->cnum)
+                ->where('tcae', $request->tcae)
+                ->first(['oid']);
+
+            if(!is_null($orderCnum)) {
+                $totalProductMergedCount = $this->order->where('cnum', $request->cnum)->first(['count']);
+                $singleOrder = $this->order->find($orderCnum->oid);
+
+                $calcCount = $totalProductMergedCount->count - $singleOrder->count;
+                $this->order->where('cnum', $request->cnum)->update(['count' => $calcCount]);
+
+                $deleted = $this->order->destroy($orderCnum->oid);
+
+                return response()->json(['success' => $deleted]);
+            }
+        }
+    }
 }
