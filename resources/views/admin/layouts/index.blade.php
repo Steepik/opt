@@ -28,7 +28,6 @@
 
     <!--  Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link href="{{ asset('admin/assets/css/themify-icons.css') }}" rel="stylesheet">
 
     @yield('css')
