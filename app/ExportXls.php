@@ -37,7 +37,10 @@ class ExportXls
                             'Остаток',
                         ),
                     ));
-                    $tires = Tire::where('quantity', '>', 0)->get();
+                    $in_reserve = Reserve::pluck('tcae')->all();
+
+                    $tires = Tire::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
+
                     foreach($tires as $tire) {
                         $sheet->rows(array(
                             array(
@@ -82,7 +85,10 @@ class ExportXls
                             'Остаток',
                         ),
                     ));
-                    $wheels = Wheel::where('quantity', '>', 0)->get();
+                    $in_reserve = Reserve::pluck('tcae')->all();
+
+                    $wheels = Wheel::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
+
                     foreach($wheels as $wheel) {
                         $sheet->rows(array(
                             array(
