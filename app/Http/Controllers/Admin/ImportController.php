@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ImportExcelRequest;
 use App\ImportExcelToDb;
 use App\Http\Controllers\Controller;
+use App\Reserve;
 use Excel;
 use App\Tire;
 use App\Wheel;
@@ -41,11 +42,15 @@ class ImportController extends Controller
                             'Наличие',
                         ),
                     ));
-                    $tires = Tire::where('quantity', '>', 0)->get();
-                    $wheels = Wheel::where('quantity', '>', 0)->get();
+                    $in_reserve = Reserve::pluck('tcae')->all();
+
+                    $tires = Tire::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
+                    $wheels = Wheel::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
+
                     $tires->each(function($item){
                         $item['brand'] = $item->brand->name;
                     });
+
                     $wheels->each(function($item){
                         $item['brand'] = $item->brand->name;
                     });
