@@ -98,6 +98,12 @@ class OrderController extends Controller
         return view('admin.list.orders', compact('orders', 'status_list', 'appends'));
     }
 
+    /**
+     * Show merged orders
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showMergeOrder($id)
     {
         $order = $this->order->find($id);
@@ -123,6 +129,12 @@ class OrderController extends Controller
         return view('admin.order_merge_info', compact('order', 'plist', 'total_sum'));
     }
 
+    /**
+     * Show single order
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showOrder($id)
     {
         $order = $this->order->find($id);
@@ -134,6 +146,12 @@ class OrderController extends Controller
         return view('admin.order_info', compact('order', 'product'));
     }
 
+    /**
+     * Change order status with ajax
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function changeOrderStatus(Request $request)
     {
         if($request->ajax()) {
@@ -157,6 +175,14 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Add comment to order
+     *
+     * @param Comment $comment
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function addComment(Comment $comment, Request $request, $id)
     {
         $comment->text = $request->text;
@@ -168,6 +194,12 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Show single order page with invoice for print
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function invoice($id)
     {
         $ntw = new NumberToWords();
@@ -179,6 +211,12 @@ class OrderController extends Controller
         return view('admin.invoice', compact('order', 'product', 'ntw'));
     }
 
+    /**
+     * Show merged order page with invoice for print
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function invoice_merged($id)
     {
         $order = $this->order->find($id);
@@ -208,6 +246,12 @@ class OrderController extends Controller
         return view('admin.invoice_merged', compact('order', 'plist', 'ntw', 'total_sum', 'total_sum_ntw'));
     }
 
+    /**
+     * Do action with orders
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function orderAction(Request $request)
     {
        if($request->oid) {
@@ -245,10 +289,12 @@ class OrderController extends Controller
                             return redirect()->back()->with('merge-error', 'Вы пытаетесь объединить заказы разных пользователей');
                         }
                    }
+
                    //get single merged order
                    $null_order = $orders_info->filter(function($item){
                        return $item->ptype == null;
                    });
+
                    //if merge more then 1 order
                    if(count($null_order) > 1) {
                        return redirect()->back()->with('merge-error', 'Возможно объединить только с одним, уже ранее объединенным заказом');
@@ -278,10 +324,12 @@ class OrderController extends Controller
                            $this->order->find($oid)->update(['merged' => 1]); // set as merged
                        }
                    } else {
+
                        // get only single orders for merge
                        $orders = $orders_info->filter(function($item){
                            return $item->ptype != null;
                        });
+
                        //index starts 0
                        $null_order = $null_order->values()->all();
                        foreach ($orders as $oid) {
@@ -370,6 +418,12 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Change order count
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function AjaxChangeOrderCount(Request $request)
     {
         if($request->ajax()) {
@@ -412,6 +466,12 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Delete single position from merged order
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function ajaxDeletePositionFromMergedOrder(Request $request)
     {
         if($request->ajax()) {

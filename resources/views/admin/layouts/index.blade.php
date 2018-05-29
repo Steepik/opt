@@ -172,9 +172,6 @@
 <!--  Notifications Plugin    -->
 <script src="{{ asset('admin/assets/js/bootstrap-notify.js') }}"></script>
 
-<!--  Google Maps Plugin    -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
-
 <script src="{{ asset('admin/assets/js/paper-dashboard.js') }}"></script>
 
 <script src="{{ asset('admin/assets/js/chart.js') }}"></script>

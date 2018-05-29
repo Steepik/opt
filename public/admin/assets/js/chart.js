@@ -33,7 +33,7 @@ chart = {
             }
           }]
         ];
-        Chartist.Line('#chartHours', dataSales, optionsSales, responsiveSales);
+        Chartist.Bar('#chartHours', dataSales, optionsSales, responsiveSales);
     },
     showNotification: function(msg, icon, type, from, align){
         $.notify({
