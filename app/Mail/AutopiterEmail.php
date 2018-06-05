@@ -28,7 +28,7 @@ class AutopiterEmail extends Mailable
      */
     public function build()
     {
-        return $this->from('torgshina-shop@yandex.ru')
+        return $this->from('belmedved31@mail.ru')
             ->subject('Прайс Лист')
             ->attach(storage_path('exports/Price-list.xls'))
             ->view('admin.emails.autopiter_email');
