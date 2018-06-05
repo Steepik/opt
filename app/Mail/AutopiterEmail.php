@@ -28,8 +28,9 @@ class AutopiterEmail extends Mailable
      */
     public function build()
     {
-        return $this->from('torg-shina@mail.ru')
-                    ->attach(public_path('excel/exports.xls'))
-                    ->view('admin.emails.autopiter_email');
+        return $this->from('torgshina-shop@yandex.ru')
+            ->subject('Прайс Лист')
+            ->attach(storage_path('exports/Price-list.xls'))
+            ->view('admin.emails.autopiter_email');
     }
 }

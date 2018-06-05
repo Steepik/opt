@@ -32,49 +32,49 @@ class ImportController extends Controller
 
     public function autopiter()
     {
-            Excel::create('Price-list', function($excel){
-                $excel->sheet('Price-list', function($sheet){
-                    $sheet->setAutoSize(true);
+        Excel::create('Price-list', function($excel){
+            $excel->sheet('Price-list', function($sheet){
+                $sheet->setAutoSize(true);
+                $sheet->rows(array(
+                    array(
+                        'Каталог',
+                        'Номер',
+                        'Наименование',
+                        'Цена',
+                        'Наличие',
+                    ),
+                ));
+                $in_reserve = Reserve::pluck('tcae')->all();
+
+                $tires = Tire::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
+                $wheels = Wheel::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
+
+                $tires->each(function($item){
+                    $item['brand'] = $item->brand->name;
+                });
+
+                $wheels->each(function($item){
+                    $item['brand'] = $item->brand->name;
+                });
+
+                $data = array_merge($tires->toArray(), $wheels->toArray());
+
+                foreach($data as $item) {
                     $sheet->rows(array(
                         array(
-                            'Каталог',
-                            'Номер',
-                            'Наименование',
-                            'Цена',
-                            'Наличие',
+                            $item['brand']['name'],
+                            $item['tcae'],
+                            $item['name'],
+                            $item['price_opt'],
+                            $item['quantity'],
                         ),
                     ));
-                    $in_reserve = Reserve::pluck('tcae')->all();
-
-                    $tires = Tire::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
-                    $wheels = Wheel::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
-
-                    $tires->each(function($item){
-                        $item['brand'] = $item->brand->name;
-                    });
-
-                    $wheels->each(function($item){
-                        $item['brand'] = $item->brand->name;
-                    });
-
-                    $data = array_merge($tires->toArray(), $wheels->toArray());
-
-                    foreach($data as $item) {
-                        $sheet->rows(array(
-                            array(
-                                $item['brand']['name'],
-                                $item['tcae'],
-                                $item['name'],
-                                $item['price_opt'],
-                                $item['quantity'],
-                            ),
-                        ));
-                    }
+                }
 
 
-                });
-            })->store('xls', public_path('excel/exports'));
+            });
+        })->store('xls');
 
-            Mail::to('dpalaydovich@gmail.com')->send(new AutopiterEmail());
+        Mail::to(['price@autopiter.ru','list@autopiter.ru'])->send(new AutopiterEmail());
     }
 }
