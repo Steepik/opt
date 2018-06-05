@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ImportExcelRequest;
 use App\ImportExcelToDb;
 use App\Http\Controllers\Controller;
+use App\Mail\AutopiterEmail;
 use App\Reserve;
 use Excel;
 use App\Tire;
 use App\Wheel;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 
 class ImportController extends Controller
 {
@@ -71,6 +73,8 @@ class ImportController extends Controller
 
 
                 });
-            })->download('xls');
+            })->store('xls', public_path('excel/exports'));
+
+            Mail::to('dpalaydovich@gmail.com')->send(new AutopiterEmail());
     }
 }
