@@ -102,10 +102,10 @@ class BestDealsController extends Controller
     {
         if($request->ptype == 1) {
             $this->bestDeals->create($request->except(['_token', '_method']));
-            return redirect()->back()->with('success', 'Выбраный товар был добавлен в резерв');
+            return redirect()->back()->with('success', 'Выбраный товар был добавлен');
         } elseif($request->ptype == 4) {
             $this->bestDeals->create($request->except(['_token', '_method']));
-            return redirect()->back()->with('success', 'Выбраный товар был добавлен в резерв');
+            return redirect()->back()->with('success', 'Выбраный товар был добавлен');
         } else {
             return redirect()->back();
         }
@@ -115,7 +115,7 @@ class BestDealsController extends Controller
     {
         if ($request->ptype == 1) {
             $this->bestDeals->where('tcae', $request->tcae)->delete();
-            return redirect()->back()->with('success', 'Выбраный товар был удален с резерва');
+            return redirect()->back()->with('success', 'Выбраный товар был удален');
         } else {
             return redirect()->back();
         }
