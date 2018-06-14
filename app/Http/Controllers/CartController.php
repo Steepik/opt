@@ -120,7 +120,7 @@ class CartController extends Controller
         //Notify admin about new order
         PusherNotify::dispatch(Lang::get('messages.new_order', ['name' => Auth::user()->legal_name]));
 
-        return redirect('/');
+        return redirect(route('order-list'));
     }
 
     /**

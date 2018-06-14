@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BestDeals;
 use App\Cart;
 use App\HistoryOrders;
 use App\Order;
@@ -54,11 +55,31 @@ class HomeController extends Controller
         $this->h_order = $h_order;
     }
 
-    public function index(StatusText $status, Request $request)
+    public function index()
     {
+        $tireTcae = BestDeals::where('ptype', 1)->orderBy('created_at')->limit(6)->pluck('tcae')->all();
+        $wheelTcae = BestDeals::where('ptype', 4)->orderBy('created_at')->limit(6)->pluck('tcae')->all();
+
+        $tires = Tire::whereIn('tcae', $tireTcae)->get();
+        $wheels = Wheel::whereIn('tcae', $wheelTcae)->get();
+
+        //get list of brands
+        $tire_brands = $this->getAllBrands(1);
+        $truck_brands = $this->getAllBrands(2);
+        $special_brands = $this->getAllBrands(3);
+        $wheels_brands = $this->getAllBrands(4);
+        //BY CAR
+        $vendors = DB::table('sel_by_cars')->select('fvendor')->distinct()->get();
+
+        return view('home', compact(['tires', 'wheels', 'list', 'tire_brands', 'truck_brands', 'special_brands', 'wheels_brands', 'vendors']));
+    }
+
+    public function orderList(Request $request)
+    {
+        $get_status = StatusText::all();
+
         $products = array();
         $list = array();
-        $get_status = $status->all();
 
         foreach($this->filteringData($request->toArray()) as $order) {
             if($order->ptype != null) {
@@ -87,7 +108,7 @@ class HomeController extends Controller
                         $order->destroy($order->id);
                         $this->h_order->where('oid', $order->id)->delete();
 
-                        return redirect(route('home'))->with('info-msg', Lang::get('messages.p_deleted', ['num' => $order->cnum]));
+                        return redirect()->back()->with('info-msg', Lang::get('messages.p_deleted', ['num' => $order->cnum]));
                     }
                 }
             } elseif($order->ptype == null) {
@@ -103,15 +124,8 @@ class HomeController extends Controller
             }
             $list[] = $products;
         }
-        //get list of brands
-        $tire_brands = $this->getAllBrands(1);
-        $truck_brands = $this->getAllBrands(2);
-        $special_brands = $this->getAllBrands(3);
-        $wheels_brands = $this->getAllBrands(4);
-        //BY CAR
-        $vendors = DB::table('sel_by_cars')->select('fvendor')->distinct()->get();
 
-        return view('home', compact(['list', 'get_status', 'tire_brands', 'truck_brands', 'special_brands', 'wheels_brands', 'vendors']));
+        return view('orders_page', compact('get_status', 'list'));
     }
 
     /**
@@ -142,7 +156,7 @@ class HomeController extends Controller
                 }
                 $this->order->destroy($ids);
 
-                return redirect(route('home'))->with('status-error', $this->error);
+                return redirect()->back()->with('status-error', $this->error);
             } elseif ($request->action == 'cancel') {
                 $order = $this->order->whereIn('id', $request->oid)->get();
                     foreach($order as $item) {
@@ -155,7 +169,7 @@ class HomeController extends Controller
                         }
                     }
 
-                    return redirect(route('home'))->with('status-error', $this->error);
+                    return redirect()->back()->with('status-error', $this->error);
 
             } elseif ($request->action == 'ready') {
                 $order = $this->order->whereIn('id', $request->oid)->get();
@@ -176,7 +190,7 @@ class HomeController extends Controller
                     }
                 }
 
-                return redirect(route('home'))->with('status-error', $this->error);
+                return redirect()->back()->with('status-error', $this->error);
             } elseif ($request->action == 'merge') {
                 if($this->checkStatus($request->oid) and count($request->oid) > 1) {
                     $cnum = $this->unique_cnum();
@@ -203,9 +217,9 @@ class HomeController extends Controller
                         $this->order->find($oid)->update(['merged' => 1]); // set as merged
                     }
                 } elseif(!$this->checkStatus($request->oid) and count($request->oid) > 1) {
-                    return redirect(route('home'))->with('status-error', Lang::get('messages.status_must_be'));
+                    return redirect()->back()->with('status-error', Lang::get('messages.status_must_be'));
                 } elseif(count($request->oid) < 2) {
-                    return redirect(route('home'))->with('status-error', Lang::get('messages.merge_min'));
+                    return redirect()->back()->with('status-error', Lang::get('messages.merge_min'));
                 }
             } elseif ($request->action == 'archive') {
                 $order = $this->order->whereIn('id', $request->oid)->get();
@@ -217,11 +231,11 @@ class HomeController extends Controller
                     }
                 }
 
-                return redirect(route('home'))->with('status-error', $this->error);
+                return redirect()->back()->with('status-error', $this->error);
             }
         }
 
-        return redirect(route('home'));
+        return redirect()->back();
     }
 
     /**

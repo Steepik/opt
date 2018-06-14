@@ -33,7 +33,7 @@
     </script>
 
 </head>
-<body>
+<body class="{{ request()->route()->getName() == 'auth' ? 'auth-background' : 'home-background'}}">
     <div id="app">
         <div id="oveflow-bg"><div id="main-bg-wrapper"></div></div>
         @auth
@@ -41,6 +41,7 @@
             <div class="container">
                 <div class="navbar-header">
                     <a href="{{ route('home') }}"><button class="pull-left collapse-btn navbar-toggle"><i class="home icon colored"></i></button></a>
+                    <a href="{{ route('order-list') }}" class="pull-left collapse-btn"><button class="navbar-toggle">Заказы</button></a>
                     <a href="{{ route('tires') }}" class="pull-left collapse-btn"><button class="navbar-toggle">Шины</button></a>
                     <a href="{{ route('wheels') }}" class="pull-left collapse-btn"><button class="navbar-toggle">Диски</button></a>
                     <a href="{{ route('cart') }}">
@@ -69,7 +70,7 @@
                     </ul>
                     <!-- Right Side Of Navbar -->
                         <ul class="nav navbar-nav navbar-left">
-                            <li><a href="{{ route('home') }}"><button class="ui inverted red basic button">Заказы</button></a></li>
+                            <li><a href="{{ route('order-list') }}"><button class="ui inverted red basic button">Заказы</button></a></li>
                             <li><a href="{{ route('tires') }}"><button class="ui inverted red basic button">Шины</button></a></li>
                             <li><a href="{{ route('wheels') }}"><button class="ui inverted red basic button">Диски</button></a></li>
                             <li><a href="{{ route('profile') }}"><button class="ui inverted red basic button">Личный кабинет</button></a></li>

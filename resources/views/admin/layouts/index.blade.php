@@ -64,6 +64,12 @@
                         <p>Заказы</p>
                     </a>
                 </li>
+                <li class="{{ request()->route()->getName() == 'best-deals' ? 'active' : '' }}">
+                    <a href="{{ route('best-deals') }}">
+                        <i class="ti-medall-alt"></i>
+                        <p>Лучшие предложения</p>
+                    </a>
+                </li>
                 <li class="{{ request()->route()->getName() == 'reserve' ? 'active' : '' }}">
                     <a href="{{ route('reserve') }}">
                         <i class="ti-archive"></i>

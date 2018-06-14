@@ -15,12 +15,13 @@ use Illuminate\Support\Facades\Redirect;
 Route::get('/', function () {
     if(Auth::check()) return Redirect::to('home');
     return view('auth.login');
-});
+})->name('auth');
 
 Auth::routes();
 
 Route::middleware(['auth', 'access'])->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/order-list', 'HomeController@orderList')->name('order-list');
     Route::get('/tires', 'TireController@index')->name('tires');
     Route::get('/wheels', 'WheelController@index')->name('wheels');
     Route::get('/tires/podbor', 'TireController@podbor')->name('podbor');
@@ -87,6 +88,9 @@ Route::middleware(['auth', 'is_admin'])->group(function(){
     Route::post('control/order_action', 'Admin\OrderController@orderAction')->name('orders_action');
     Route::post('control/changeOrderCount', 'Admin\OrderController@AjaxChangeOrderCount');
     Route::post('control/delOrderInMerged', 'Admin\OrderController@ajaxDeletePositionFromMergedOrder');
+    Route::get('control/best-deals', 'Admin\BestDealsController@index')->name('best-deals');
+    Route::post('control/best-deals/add/', 'Admin\BestDealsController@addToBestDeals')->name('bestdeals-add');
+    Route::post('control/best-deals/delete/', 'Admin\BestDealsController@deleteFromBestDeals')->name('bestdeals-delete');
 });
 
 // *** AUTOPITER PRICE-LIST ***//
