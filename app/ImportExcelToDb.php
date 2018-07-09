@@ -47,6 +47,9 @@ class ImportExcelToDb
                         $item['shirina'] = str_replace(',', '.', $item['shirina']);
                     }
 
+                    $item['opt'] = str_replace(' ', '', $item['opt']);
+                    $item['roznitsa'] = str_replace(' ', '', $item['roznitsa']);
+
                     $this->addDataTire(
                         $new_brand->id, $item['polnoe_naimenovanie'], $item['imya_fayla'], '',
                         $item['shirina'], $item['profil'], $item['diametr'], $item['indeks_narguzki'], $item['indeks_skorosti'],
