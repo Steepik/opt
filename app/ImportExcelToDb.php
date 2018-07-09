@@ -14,7 +14,7 @@ class ImportExcelToDb
             $brands = new Brand();
             //$reader->ignoreEmpty();
             
-            $reader = $reader->take(100)->each(function($sheet){
+            $reader = $reader->each(function($sheet){
             	/*$sheet['dia'] = number_format($sheet->dia, 1, '.', '');
             	if(str_contains($sheet['polnoe_naimenovanie'], '9999999999999')) {
             		$str = preg_replace('/([0-9]{2}|[0-9]{3})\.([0-9])9999999999999/', $sheet['dia'], $sheet['polnoe_naimenovanie']);
