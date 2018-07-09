@@ -5,7 +5,7 @@
         <div class="col-md-7">
             <div class="card">
                 <div class="header">
-                    <h4 class="title">Резерв</h4>
+                    <h4 class="title">Поиск товара</h4>
                     <p class="category"></p>
                 </div>
                 <hr/>
@@ -74,8 +74,8 @@
         <div class="col-md-5">
             <div class="card">
                 <div class="header">
-                    <h4 class="title">Товары в резерве</h4>
-                    <p class="category">Список товаров которые уже в резерве</p>
+                    <h4 class="title">Товары</h4>
+                    <p class="category">Список товаров для отображения</p>
                 </div>
                 <hr/>
                 <form action="{{ route('best-deals') }}" method="GET">

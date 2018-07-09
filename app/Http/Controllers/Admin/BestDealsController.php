@@ -50,7 +50,7 @@ class BestDealsController extends Controller
 
         $in_reserve = $this->bestDeals->pluck('tcae')->all();
 
-        if(!empty($request->q)) {
+        if (!empty($request->q)) {
             $products = $this->tire->whereNotIn('tcae', $in_reserve)
                 ->where('name', 'like', '%' . $request->q . '%')
                 ->orderBy('name')
@@ -62,7 +62,7 @@ class BestDealsController extends Controller
                 ->count();
         }
 
-        if(!empty($request->qw)) {
+        if (!empty($request->qw)) {
             //if text contains symbol "," then replace it "."
             if(str_contains($request->qw, ',')) {
                 $request['qw'] = str_replace(',', '.', $request->qw);
@@ -100,7 +100,7 @@ class BestDealsController extends Controller
 
     public function addToBestDeals(Request $request)
     {
-        if($request->ptype == 1) {
+        if ($request->ptype == 1) {
             $this->bestDeals->create($request->except(['_token', '_method']));
             return redirect()->back()->with('success', 'Выбраный товар был добавлен');
         } elseif($request->ptype == 4) {

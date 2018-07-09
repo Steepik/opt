@@ -12,10 +12,10 @@ class ImportExcelToDb
     public function import($filename) {
             Excel::selectSheetsByIndex(0)->load($filename, function($reader) {
             $brands = new Brand();
-            $reader->ignoreEmpty();
+            //$reader->ignoreEmpty();
             
-            $reader = $reader->each(function($sheet){
-            	$sheet['dia'] = number_format($sheet->dia, 1, '.', '');
+            $reader = $reader->take(100)->each(function($sheet){
+            	/*$sheet['dia'] = number_format($sheet->dia, 1, '.', '');
             	if(str_contains($sheet['polnoe_naimenovanie'], '9999999999999')) {
             		$str = preg_replace('/([0-9]{2}|[0-9]{3})\.([0-9])9999999999999/', $sheet['dia'], $sheet['polnoe_naimenovanie']);
                     $sheet['polnoe_naimenovanie'] = $str;
@@ -25,11 +25,10 @@ class ImportExcelToDb
     					return $matches[1] + 1;
 					}, $sheet['cai']);
 					$sheet['cai'] = $str;
-            	}
+            	}*/
             });
-            	
-            $result = $reader->all();
 
+            $result = $reader->all();
             foreach($result as $item) {
                 $brand_name = Str::ucfirst(Str::lower(trim($item->brend)));
                 $brands_check = $brands->where('name' , $brand_name);
@@ -42,6 +41,10 @@ class ImportExcelToDb
                         ]);
                     } else {
                         $new_brand = $brands_check->first();
+                    }
+
+                    if(str_contains($item['shirina'], ',')) {
+                        $item['shirina'] = str_replace(',', '.', $item['shirina']);
                     }
 
                     $this->addDataTire(
@@ -58,6 +61,14 @@ class ImportExcelToDb
                         ]);
                     } else {
                         $new_brand = $brands_check->first();
+                    }
+
+                    if (str_contains($item['shirina_oboda'], ',')) {
+                        $item['shirina_oboda'] = str_replace(',', '.', $item['shirina_oboda']);
+                    }
+
+                    if (str_contains($item['dia'], ',')) {
+                        $item['dia'] = str_replace(',', '.', $item['dia']);
                     }
 
                     $this->addDataWheel(
@@ -119,8 +130,8 @@ class ImportExcelToDb
                 'tcae' => trim($tcae),
                 'spike' => ($spike == 'Да') ? 1 : 0,
                 'model_class' => $model_class,
-                'price_opt' => ($price_opt != 0) ? $price_opt : 0,
-                'price_roz' => ($price_roz != 0) ? $price_roz : 0,
+                'price_opt' => ($price_opt != 0) ? intval($price_opt) : 0,
+                'price_roz' => ($price_roz != 0) ? intval($price_roz) : 0,
                 'quantity' => ($quantity == null) ? 0 : $quantity,
             ]);
     }
@@ -147,7 +158,7 @@ class ImportExcelToDb
                 'et' => $et,
                 'model' => isset($model) ? $model : '',
                 'et' => $et,
-                'dia' => $dia,
+                'dia' => floatval($dia),
                 'tcae' => trim($tcae),
                 'type' => $type,
                 'price_opt' => ($price_opt != 0) ? $price_opt : 0,
