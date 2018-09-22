@@ -179,7 +179,23 @@
                                 <thead class="center aligned">
                                 <tr><th >Название</th>
                                     <th nowrap>Цена (Розница)</th>
-                                    <th nowrap>Цена (Оптом)</th>
+                                    @if(!Session::has('hideOpt'))
+                                    <th nowrap>
+                                        @if(isset($appends['sortOptPrice']) and $appends['sortOptPrice'] == 'asc')
+                                            <a title="Сортировать по убыванию" href="{{ url(request()->getUri().'&sortOptPrice=desc') }}">
+                                                Цена (Оптом) <i class="arrow up icon"></i>
+                                            </a>
+                                        @elseif(isset($appends['sortOptPrice']) and $appends['sortOptPrice'] == 'desc')
+                                            <a title="Сортировать по возрастанию" href="{{ url(request()->getUri().'&sortOptPrice=asc') }}">
+                                                Цена (Оптом)<i class="arrow down icon"></i>
+                                            </a>
+                                        @elseif(!isset($appends['sortOptPrice']))
+                                            <a title="Сортировать по возрастанию" href="{{ url(request()->getUri().'&sortOptPrice=asc') }}">
+                                                Цена (Оптом) <i class="arrow down icon"></i>
+                                            </a>
+                                        @endif
+                                    </th>
+                                    @endif
                                     <th>Остаток</th>
                                     <th>Действия</th>
                                 </tr></thead>
@@ -219,7 +235,9 @@
                                             </div>
                                         </h4></td>
                                     <td class="center aligned">{{ $tire->price_roz }}</td>
+                                    @if(!Session::has('hideOpt'))
                                     <td class="center aligned" style="font-style: italic;"><b>{{ $tire->price_opt }}</b></td>
+                                    @endif
                                     <td class="center aligned" style="font-style: italic;">
                                         @if($tire->quantity > 8)
                                             <b> > 8 </b>
@@ -258,7 +276,11 @@
                         @endif
                     </div>
                 </div>
-                <div class="paginate"> {{ $data->appends($appends)->render() }}</div>
+                <div class="paginate"> {{ $data->appends($appends)->render() }}
+                    @if($data->hasMorePages() > 0)
+                        <a href="{{ url(request()->getUri().'&limit=all') }}" class="limit-all btn btn-primary">Отобразить всё</a>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

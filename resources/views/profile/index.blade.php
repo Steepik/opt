@@ -141,6 +141,11 @@
                                                                     <i class="phone icon"></i>
                                                                 </div>
                                                             </div>
+                                                            <hr/>
+                                                            <div class="ui checkbox">
+                                                                <input type="checkbox" name="hideOptPrice" {{ Session::has('hideOpt') ? 'checked' : '' }}>
+                                                                <label for="hideOptPrice">Скрыть оптовую цену</label>
+                                                            </div>
                                                             <div class="text-center">
                                                                 <button type="submit" class="ui blue button btn-wd">Сохранить</button>
                                                             </div>
@@ -194,7 +199,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="clearfix"></div>
+                                <div class="clearfix"></div>
                             </div>
                         </div>
                     </div>

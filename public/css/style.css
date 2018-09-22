@@ -522,6 +522,15 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
     font-size: 20px;
 }
 
+.paginate {
+    position: relative;
+}
+.limit-all {
+    position: absolute;
+    top: 1.5rem;
+    right: 0rem;
+}
+
 /** RESPONSIVE **/
 @media screen and (min-width: 1024px) {
     .table-responsive {

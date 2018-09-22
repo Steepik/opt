@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
+use Session;
 
 class ProfileController extends Controller
 {
@@ -41,6 +42,12 @@ class ProfileController extends Controller
     {
         $user = $this->user->find(Auth::user()->id);
         $result = $user->update($request->except('_token'));
+
+        if(isset($request->hideOptPrice)) {
+            Session::put('hideOpt', true);
+        } else {
+            Session::forget('hideOpt');
+        }
 
         if($result) {
             return redirect()->back()->with('success', '');

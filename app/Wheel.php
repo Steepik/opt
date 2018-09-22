@@ -17,7 +17,7 @@ class Wheel extends Model
 
     public function scopeBrandImage($query, $brand_name)
     {
-        $image_id = DB::table('manufacturer')->select('manufacturer_id')->where('name', 'like', '%' . $brand_name . '%');
+        $image_id = DB::table('manufacturer')->select('manufacturer_id')->where('name', 'like', $brand_name . '%');
 
         return $image_id;
     }

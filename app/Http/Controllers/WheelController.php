@@ -27,6 +27,7 @@ class WheelController extends Controller
         $session = Session();
         $filter = array();
         $type = $request->type;
+        $limit = $request->limit;
         $wheel = Wheel::query();
         $session->forget(['width', 'diameter', 'hole_count', 'pcd', 'et', 'dia', 'cae', 'brand']);
         //get list of brands only for wheel
@@ -50,9 +51,9 @@ class WheelController extends Controller
         }
         if (!empty($request->pcd)) {
             //check if diameter has symbol like ',' change it to '.'
-            if(str_contains($request->pcd, ','))
+            if(str_contains($request->pcd, '.'))
             {
-                $request->pcd = str_replace(',', '.', $request->pcd);
+                $request->pcd = str_replace('.', ',', $request->pcd);
             }
             $filter['pcd'] = $request->pcd;
             $session->flash('pcd', $request->pcd);
@@ -83,7 +84,17 @@ class WheelController extends Controller
             $filter['brand_id'] = $request->brand_id;
             $session->flash('brand', $request->brand_id);
         }
-        $data = $wheel->where($filter)->where('quantity', '>', 0)->paginate(10);
+        if($limit === 'all') {
+            $data = $wheel->where($filter)
+                ->where('quantity', '>', 0)
+                ->orderBy('price_opt', $request->sortOptPrice)
+                ->paginate(999999);
+        } else {
+            $data = $wheel->where($filter)
+                ->where('quantity', '>', 0)
+                ->orderBy('price_opt', $request->sortOptPrice)
+                ->paginate(10);
+        }
 
         return view('wheels.podbor', compact('data', 'brands_list', 'appends','type'));
     }

@@ -40,7 +40,8 @@ class TireController extends Controller
 
         $data = $this->filter(
                 $request->type, $request->twidth, $request->tprofile, $request->tdiameter,
-                $request->tseason, $request->brand_id, $request->tcae, $request->taxis
+                $request->tseason, $request->brand_id, $request->tcae, $request->taxis, $request->limit,
+                $request->sortOptPrice
             );
 
         return view('tires.podbor', compact('data', 'appends', 'brands_list', 'filter_type', 'type'));
@@ -59,7 +60,8 @@ class TireController extends Controller
      * @param string $taxis | tire's axis only for truck
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function filter($type, $twidth, $tprofile, $tdiameter, $tseason = '', $tbrand, $tcae = '', $taxis = '') {
+    public function filter($type, $twidth, $tprofile, $tdiameter, $tseason = '', $tbrand, $tcae = '', $taxis = '',
+                           $limit = 10, $sortOptPrice = 'desc') {
         $session = Session();
         $filter = array();
         if ($type == 1) { // tires
@@ -103,8 +105,19 @@ class TireController extends Controller
                 $filter['tcae'] = $tcae;
                 $session->flash('tcae', $tcae);
             }
-            $data = $tire->where($filter)->where('quantity', '>', 0)->paginate(10);
-            $data->each(function($item, $key) use ($data) {
+
+            if($limit === 'all') {
+                $data = $tire->where($filter)
+                    ->where('quantity', '>', 0)
+                    ->orderBy('price_opt', $sortOptPrice)
+                    ->paginate(999999);
+            } else {
+                $data = $tire->where($filter)
+                    ->where('quantity', '>', 0)
+                    ->orderBy('price_opt', $sortOptPrice)
+                    ->paginate(10);
+            }
+                $data->each(function($item, $key) use ($data) {
                 $reserve = Reserve::where('tcae', $item->tcae)->where('ptype', 1)->first();
                 if(! is_null($reserve)) { // if product is in reserve then remove element from collect
                     $data->forget($key);
@@ -159,7 +172,17 @@ class TireController extends Controller
                 $filter['axis'] = $taxis;
                 $session->flash('traxis', $taxis);
             }
-            $data = $truck->where($filter)->where('quantity', '>', 0)->paginate(10);
+            if($limit === 'all') {
+                $data = $truck->where($filter)
+                    ->where('quantity', '>', 0)
+                    ->orderBy('price_opt', $sortOptPrice)
+                    ->paginate(999999);
+            } else {
+                $data = $truck->where($filter)
+                    ->where('quantity', '>', 0)
+                    ->orderBy('price_opt', $sortOptPrice)
+                    ->paginate(10);
+            }
         } elseif ($type == 3) { // special tires
             $special = Special::query();
             $session->forget(['swidth', 'sprofile', 'sdiameter', 'sseason', 'sbrand', 'scae']);
@@ -201,7 +224,17 @@ class TireController extends Controller
                 $session->flash('scae', $tcae);
             }
 
-            $data = $special->where($filter)->where('quantity', '>', 0)->paginate(10);
+            if($limit === 'all') {
+                $data = $special->where($filter)
+                    ->where('quantity', '>', 0)
+                    ->orderBy('price_opt', $sortOptPrice)
+                    ->paginate(999999);
+            } else {
+                $data = $special->where($filter)
+                    ->where('quantity', '>', 0)
+                    ->orderBy('price_opt', $sortOptPrice)
+                    ->paginate(10);
+            }
         } else {
             abort(204, ''); // no content
         }
