@@ -52,10 +52,10 @@
                                         </div>
                                         <div class="field">
                                             <label>Тип диска</label>
-                                            <select class="form-control" name="type">
+                                            <select class="form-control" name="d_type">
                                                 <option value="">Любой</option>
-                                                <option value="Литой" {{ Session::get('type') == 'Литой' ? 'selected' : '' }}>Литой</option>
-                                                <option value="Штампованный" {{ Session::get('type') == 'Штампованный' ? 'selected' : '' }}>Штампованный</option>
+                                                <option value="Литой" {{ Session::get('d_type') == 'Литой' ? 'selected' : '' }}>Литой</option>
+                                                <option value="Штампованный" {{ Session::get('d_type') == 'Штампованный' ? 'selected' : '' }}>Штампованный</option>
                                             </select>
                                         </div>
                                         <div class="field">
