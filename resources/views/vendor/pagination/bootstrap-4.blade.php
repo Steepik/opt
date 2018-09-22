@@ -37,7 +37,7 @@
             </li>
             <li class="page-item">
                 @php
-                    $url = preg_replace('/&page=[0-9]/', '', request()->getUri());
+                    $url = preg_replace('/&page=[0-9]|page=[0-9]/', '', request()->getUri());
                 @endphp
                 <a class="page-link" href="{{ $url.'&limit=all' }}" >Отобразить всё</a>
             </li>

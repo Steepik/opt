@@ -7,7 +7,25 @@ use Illuminate\Support\Str;
 
 class ImportExcelToDb
 {
-    public $deleted = false;
+
+    /**
+     * Before we will add data from Excel first we must dog truncate tables
+     *
+     * ImportExcelToDb constructor.
+     * @param Tire $tire
+     * @param Truck $truck
+     * @param Wheel $wheel
+     */
+    public function __construct()
+    {
+        $tire = new Tire();
+        $truck = new Truck();
+        $wheel = new Wheel();
+
+        $tire->truncate();
+        $truck->truncate();
+        $wheel->truncate();
+    }
 
     public function import($filename) {
             Excel::selectSheetsByIndex(0)->load($filename, function($reader) {
@@ -113,11 +131,6 @@ class ImportExcelToDb
 
         $t_tire = ($t_type == 'Легковая' ? new Tire() : new Truck());
 
-            if($this->deleted === false) {
-                $t_tire->truncate();
-                $this->deleted = true;
-            }
-
             $t_tire->create([
                 'brand_id' => $brand_id,
                 'name' => $name,
@@ -143,11 +156,6 @@ class ImportExcelToDb
                                     $type, $price_opt, $price_roz, $quantity) {
 
         $wheels = new Wheel();
-
-        if($this->deleted === false) {
-            $wheels->truncate();
-            $this->deleted = true;
-        }
 
             $wheels->create([
                 'brand_id' => $brand_id,
