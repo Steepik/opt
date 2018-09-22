@@ -41,7 +41,7 @@ class TireController extends Controller
         $data = $this->filter(
                 $request->type, $request->twidth, $request->tprofile, $request->tdiameter,
                 $request->tseason, $request->brand_id, $request->tcae, $request->taxis, $request->limit,
-                $request->sortOptPrice
+                $request->sortOptPrice, $request->sortRozPrice
             );
 
         return view('tires.podbor', compact('data', 'appends', 'brands_list', 'filter_type', 'type'));
@@ -61,7 +61,7 @@ class TireController extends Controller
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function filter($type, $twidth, $tprofile, $tdiameter, $tseason = '', $tbrand, $tcae = '', $taxis = '',
-                           $limit = 10, $sortOptPrice = 'desc') {
+                           $limit = 10, $sortOptPrice = 'desc', $sortRozPrice = 'desc') {
         $session = Session();
         $filter = array();
         if ($type == 1) { // tires
@@ -106,15 +106,32 @@ class TireController extends Controller
                 $session->flash('tcae', $tcae);
             }
 
+            if (isset($sortOptPrice)) {
+                $orderBy = [
+                    'field' => 'price_opt',
+                    'sort'  => $sortOptPrice,
+                ];
+            } elseif (isset($sortRozPrice)) {
+                $orderBy = [
+                    'field' => 'price_roz',
+                    'sort'  => $sortRozPrice,
+                ];
+            } else {
+                $orderBy = [
+                    'field' => 'id',
+                    'sort'  => 'desc',
+                ];
+            }
+
             if($limit === 'all') {
                 $data = $tire->where($filter)
                     ->where('quantity', '>', 0)
-                    ->orderBy('price_opt', $sortOptPrice)
+                    ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(999999);
             } else {
                 $data = $tire->where($filter)
                     ->where('quantity', '>', 0)
-                    ->orderBy('price_opt', $sortOptPrice)
+                    ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(10);
             }
                 $data->each(function($item, $key) use ($data) {
@@ -172,15 +189,33 @@ class TireController extends Controller
                 $filter['axis'] = $taxis;
                 $session->flash('traxis', $taxis);
             }
+
+            if (isset($sortOptPrice)) {
+                $orderBy = [
+                    'field' => 'price_opt',
+                    'sort'  => $sortOptPrice,
+                ];
+            } elseif (isset($sortRozPrice)) {
+                $orderBy = [
+                    'field' => 'price_roz',
+                    'sort'  => $sortRozPrice,
+                ];
+            } else {
+                $orderBy = [
+                    'field' => 'id',
+                    'sort'  => 'desc',
+                ];
+            }
+
             if($limit === 'all') {
                 $data = $truck->where($filter)
                     ->where('quantity', '>', 0)
-                    ->orderBy('price_opt', $sortOptPrice)
+                    ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(999999);
             } else {
                 $data = $truck->where($filter)
                     ->where('quantity', '>', 0)
-                    ->orderBy('price_opt', $sortOptPrice)
+                    ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(10);
             }
         } elseif ($type == 3) { // special tires
@@ -224,15 +259,32 @@ class TireController extends Controller
                 $session->flash('scae', $tcae);
             }
 
+            if (isset($sortOptPrice)) {
+                $orderBy = [
+                    'field' => 'price_opt',
+                    'sort'  => $sortOptPrice,
+                ];
+            } elseif (isset($sortRozPrice)) {
+                $orderBy = [
+                    'field' => 'price_roz',
+                    'sort'  => $sortRozPrice,
+                ];
+            } else {
+                $orderBy = [
+                    'field' => 'id',
+                    'sort'  => 'desc',
+                ];
+            }
+
             if($limit === 'all') {
                 $data = $special->where($filter)
                     ->where('quantity', '>', 0)
-                    ->orderBy('price_opt', $sortOptPrice)
+                    ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(999999);
             } else {
                 $data = $special->where($filter)
                     ->where('quantity', '>', 0)
-                    ->orderBy('price_opt', $sortOptPrice)
+                    ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(10);
             }
         } else {

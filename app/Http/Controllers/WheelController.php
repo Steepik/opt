@@ -84,15 +84,37 @@ class WheelController extends Controller
             $filter['brand_id'] = $request->brand_id;
             $session->flash('brand', $request->brand_id);
         }
+        if (!empty($request->type)) {
+            $filter['type'] = $request->type;
+            $session->flash('type', $request->type);
+        }
+
+        if (isset($request->sortOptPrice)) {
+            $orderBy = [
+                'field' => 'price_opt',
+                'sort'  => $request->sortOptPrice,
+            ];
+        } elseif (isset($request->sortRozPrice)) {
+            $orderBy = [
+                'field' => 'price_roz',
+                'sort'  => $request->sortRozPrice,
+            ];
+        } else {
+            $orderBy = [
+                'field' => 'id',
+                'sort'  => 'desc',
+            ];
+        }
+
         if($limit === 'all') {
             $data = $wheel->where($filter)
                 ->where('quantity', '>', 0)
-                ->orderBy('price_opt', $request->sortOptPrice)
+                ->orderBy($orderBy['field'], $orderBy['sort'])
                 ->paginate(999999);
         } else {
             $data = $wheel->where($filter)
                 ->where('quantity', '>', 0)
-                ->orderBy('price_opt', $request->sortOptPrice)
+                ->orderBy($orderBy['field'], $orderBy['sort'])
                 ->paginate(10);
         }
 

@@ -50,6 +50,14 @@
                                             </select>
                                         </div>
                                         <div class="field">
+                                            <label>Тип диска</label>
+                                            <select class="form-control" name="type">
+                                                <option value="">Любой</option>
+                                                <option value="Литой" {{ Session::get('type') == 'Литой' ? 'selected' : '' }}>Литой</option>
+                                                <option value="Штампованный" {{ Session::get('type') == 'Литой' ? 'Штампованный' : '' }}>Штампованный</option>
+                                            </select>
+                                        </div>
+                                        <div class="field">
                                             <label>CAE</label>
                                             <input type="text" name="tcae">
                                         </div>

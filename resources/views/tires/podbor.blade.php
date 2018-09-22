@@ -178,21 +178,26 @@
                             <table class="table table-hover">
                                 <thead class="center aligned">
                                 <tr><th >Название</th>
-                                    <th nowrap>Цена (Розница)</th>
+                                    <th nowrap>
+                                        @php
+                                            $url = 'tires/podbor?'.http_build_query(request()->except(['sortOptPrice', 'sortRozPrice']));
+                                        @endphp
+                                        @if(isset($appends['sortRozPrice']) and $appends['sortRozPrice'] == 'asc')
+                                            <a title="Сортировать по убыванию" href="{{ url($url.'&sortRozPrice=desc') }}">Цена (Розница) <i class="arrow up icon"></i></a>
+                                        @elseif(isset($appends['sortRozPrice']) and $appends['sortRozPrice'] == 'desc')
+                                            <a title="Сортировать по возрастанию" href="{{ url($url.'&sortRozPrice=asc') }}">Цена (Розница) <i class="arrow down icon"></i></a>
+                                        @elseif(!isset($appends['sortRozPrice']))
+                                            <a title="Сортировать по возрастанию" href="{{ url($url.'&sortRozPrice=asc') }}">Цена (Розница) <i class="arrow down icon"></i></a>
+                                        @endif
+                                    </th>
                                     @if(!Session::has('hideOpt'))
                                     <th nowrap>
                                         @if(isset($appends['sortOptPrice']) and $appends['sortOptPrice'] == 'asc')
-                                            <a title="Сортировать по убыванию" href="{{ url(request()->getUri().'&sortOptPrice=desc') }}">
-                                                Цена (Оптом) <i class="arrow up icon"></i>
-                                            </a>
+                                            <a title="Сортировать по убыванию" href="{{ url($url.'&sortOptPrice=desc') }}">Цена (Оптом) <i class="arrow up icon"></i></a>
                                         @elseif(isset($appends['sortOptPrice']) and $appends['sortOptPrice'] == 'desc')
-                                            <a title="Сортировать по возрастанию" href="{{ url(request()->getUri().'&sortOptPrice=asc') }}">
-                                                Цена (Оптом)<i class="arrow down icon"></i>
-                                            </a>
+                                            <a title="Сортировать по возрастанию" href="{{ url($url.'&sortOptPrice=asc') }}">Цена (Оптом) <i class="arrow down icon"></i></a>
                                         @elseif(!isset($appends['sortOptPrice']))
-                                            <a title="Сортировать по возрастанию" href="{{ url(request()->getUri().'&sortOptPrice=asc') }}">
-                                                Цена (Оптом) <i class="arrow down icon"></i>
-                                            </a>
+                                            <a title="Сортировать по возрастанию" href="{{ url($url.'&sortOptPrice=asc') }}">Цена (Оптом) <i class="arrow down icon"></i></a>
                                         @endif
                                     </th>
                                     @endif
@@ -276,11 +281,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="paginate"> {{ $data->appends($appends)->render() }}
-                    @if($data->hasMorePages() > 0)
-                        <a href="{{ url(request()->getUri().'&limit=all') }}" class="limit-all btn btn-primary">Отобразить всё</a>
-                    @endif
-                </div>
+                <div class="paginate"> {{ $data->appends($appends)->render() }}</div>
             </div>
         </div>
     </div>
