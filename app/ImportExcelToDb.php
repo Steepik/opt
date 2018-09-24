@@ -7,25 +7,8 @@ use Illuminate\Support\Str;
 
 class ImportExcelToDb
 {
-
-    /**
-     * Before we will add data from Excel first we must dog truncate tables
-     *
-     * ImportExcelToDb constructor.
-     * @param Tire $tire
-     * @param Truck $truck
-     * @param Wheel $wheel
-     */
-    public function __construct()
-    {
-        $tire = new Tire();
-        $truck = new Truck();
-        $wheel = new Wheel();
-
-        $tire->truncate();
-        $truck->truncate();
-        $wheel->truncate();
-    }
+    public $once = false;
+    public $onceTruck = false;
 
     public function import($filename) {
             Excel::selectSheetsByIndex(0)->load($filename, function($reader) {
@@ -74,6 +57,21 @@ class ImportExcelToDb
                         $item['sezonnost'], $item['model'], $item['cai'], $item['ship'], '', $item['opt'], $item['roznitsa'],
                         $item['obshch._kol_vo'], $item['tip_shiny']
                     );
+
+                    //truncate data
+                    $t_tire = ($item['tip_shiny'] == 'Легковая' ? new Tire() : new Truck());
+
+                    if ($t_tire instanceof Tire) {
+                        if ($this->once == false) {
+                            $t_tire->truncate();
+                            $this->once = true;
+                        }
+                    } elseif ($t_tire instanceof Truck) {
+                        if ($this->onceTruck == false) {
+                            $t_tire->truncate();
+                            $this->onceTruck = true;
+                        }
+                    }
                 } elseif(isset($item['brend']) and $item['brend'] != null and isset($item['tip_diska'])) {
                     if (!$brands_check->first()) { // if brand's name doesn't exist in DB then add new brand name
                         $new_brand = $brands->create([
@@ -97,6 +95,13 @@ class ImportExcelToDb
                         $item['shirina_oboda'], $item['posadochnyy_diametr'], $item['kol_vo_otverstviy'], $item['psd'], $item['vylet_et'],
                         $item['dia'], $item['cai'], $item['tip_diska'], $item['opt'], $item['tsena_v_nalichii'], $item['obshch._kol.']
                     );
+
+                    //truncate data
+                    if ($this->once == false) {
+                        $tire = new Wheel();
+                        $tire->truncate();
+                        $this->once = true;
+                    }
                 }
             }
         }, 'UTF-8');
