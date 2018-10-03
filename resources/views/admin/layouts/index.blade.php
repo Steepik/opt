@@ -82,6 +82,12 @@
                         <p>Статистика</p>
                     </a>
                 </li>
+                <li class="{{ request()->route()->getName() == 'settings' ? 'active' : '' }}">
+                    <a href="{{ route('settings') }}">
+                        <i class="ti-settings"></i>
+                        <p>Настройки</p>
+                    </a>
+                </li>
                 <li class="{{ request()->route()->getName() == 'import' ? 'active' : '' }}">
                     <a href="{{ route('import') }}">
                         <i class="ti-import"></i>

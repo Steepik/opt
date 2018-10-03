@@ -8,6 +8,7 @@ use App\HistoryOrders;
 use App\Order;
 use App\OrderMerges;
 use App\StatusText;
+use App\Traits\CalcPercent;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ use NumberToWords\NumberToWords;
 
 class OrderController extends Controller
 {
+    use CalcPercent;
+
     /**
      * @var Order
      */
@@ -94,7 +97,10 @@ class OrderController extends Controller
                 ->paginate(10);
         }
 
+
+
         $status_list = StatusText::all();
+
         return view('admin.list.orders', compact('orders', 'status_list', 'appends'));
     }
 
@@ -113,6 +119,11 @@ class OrderController extends Controller
         foreach($merged as $item) {
            foreach($item->orders as $info_order) {
                $product = Cart::getInstanceProductType($info_order->ptype)->where('tcae', $info_order->tcae)->first();
+
+               if ($info_order->percent_value != 0) {
+                   $product->price_opt = $this->calcPercentForOptPrice($product->price_opt, $order->uid, $product->brand_id, $info_order->percent_value);
+               }
+
                if(! is_null($product)) {
                    $product['count'] = $info_order->count;
                    $plist->push($product);
@@ -123,6 +134,7 @@ class OrderController extends Controller
                    $plist->push($history);
                    $total_sum += $history->price_opt * $info_order->count;
                }
+
            }
         }
 
@@ -140,6 +152,11 @@ class OrderController extends Controller
         $order = $this->order->find($id);
         $pinstance = Cart::getInstanceProductType($order->ptype);
         $product = $pinstance->where('tcae', $order->tcae)->first();
+
+        if ($order->percent_value != 0) {
+            $product->price_opt = $this->calcPercentForOptPrice($product->price_opt, $order->uid, $product->brand_id, $order->percent_value);
+        }
+
         if(is_null($product)) {
             $product = $this->h_order->where('oid', $order->id)->first();
         }
@@ -205,6 +222,11 @@ class OrderController extends Controller
         $ntw = new NumberToWords();
         $order = Order::find($id);
         $product = Cart::getInstanceProductType($order->ptype)->where('tcae', $order->tcae)->first();
+
+        if ($order->percent_value != 0) {
+            $product->price_opt = $this->calcPercentForOptPrice($product->price_opt, $order->uid, $product->brand_id, $order->percent_value);
+        }
+
         if(is_null($product)) {
             $product = $this->h_order->where('oid', $order->id)->first();
         }
@@ -228,6 +250,11 @@ class OrderController extends Controller
         foreach($merged as $item) {
             foreach($item->orders as $info_order) {
                 $product = Cart::getInstanceProductType($info_order->ptype)->where('tcae', $info_order->tcae)->first();
+
+                if ($info_order->percent_value != 0) {
+                    $product->price_opt = $this->calcPercentForOptPrice($product->price_opt, $order->uid, $product->brand_id, $info_order->percent_value);
+                }
+
                 if(! is_null($product)) {
                     $product['count'] = $info_order->count;
                     $plist->push($product);

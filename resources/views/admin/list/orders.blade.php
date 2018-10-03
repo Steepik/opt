@@ -84,7 +84,27 @@
                                             if(is_null($product)) {
                                                 $product = \App\HistoryOrders::where('oid', $order->id)->first();
                                             }
+
+                                            $user = \App\User::find($order->uid);
+
+                                            foreach($user->percent as $userPercent) {
+                                                if ($product->brand_id == $userPercent->brand_id) {
+                                                    $percent = $order->percent_value;
+
+                                                    if ($percent < 0) { // Decrease by percent
+                                                        $coeff = $product->price_opt / 100;
+                                                        $equil = $coeff * abs($percent); #from negative value to positive
+                                                        $product->price_opt = $product->price_opt - $equil;
+                                                    } else { // Increase by percent
+                                                        $coeff = $product->price_opt / 100;
+                                                        $equil = $coeff * $percent;
+                                                        $product->price_opt = $equil + $product->price_opt;
+                                                    }
+                                                }
+                                            }
+
                                         }
+
                                     @endphp
                                     @if($order->merged == false and $order->ptype != null)
                                     <tr>
@@ -157,7 +177,28 @@
                                             foreach($result as $item){
                                                 foreach($item->orders as $m_order) {
                                                     $product = \App\Cart::getInstanceProductType($m_order->ptype)->where('tcae', $m_order->tcae)->first();
-                                                    if(! is_null($product)) {
+
+                                                    if (!is_null($product)) {
+                                                         $user = \App\User::find($m_order->uid);
+
+                                                        foreach($user->percent as $userPercent) {
+                                                            if ($product->brand_id == $userPercent->brand_id) {
+                                                               $percent = $m_order->percent_value;
+
+                                                                if ($percent < 0) { // Decrease by percent
+                                                                    $coeff = $product->price_opt / 100;
+                                                                    $equil = $coeff * abs($percent); #from negative value to positive
+                                                                    $product->price_opt = $product->price_opt - $equil;
+                                                                } else { // Increase by percent
+                                                                    $coeff = $product->price_opt / 100;
+                                                                    $equil = $coeff * $percent;
+                                                                    $product->price_opt = $equil + $product->price_opt;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                     if(! is_null($product)) {
                                                         $total_price += $product->price_opt * $m_order->count;
                                                         $p_list->push($product);
                                                     } else {
@@ -165,6 +206,7 @@
                                                         $total_price += $history->price_opt * $m_order->count;
                                                         $p_list->push($history);
                                                     }
+
                                                 }
                                             }
                                         @endphp

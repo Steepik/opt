@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Brand;
 use App\Wheel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 class WheelController extends Controller
@@ -23,6 +24,8 @@ class WheelController extends Controller
         if (!$request->all()) {
             return redirect('/');
         }
+
+        $user = Auth::user();
         $appends = $request->except('_token');
         $session = Session();
         $filter = array();
@@ -109,12 +112,18 @@ class WheelController extends Controller
         }
 
         if($limit === 'all') {
-            $data = $wheel->where($filter)
+            $data = $wheel->whereDoesntHave('brandAccess', function($query) use($user) {
+                $query->where('user_id', '=', $user->id)->whereIn('brand_id', $user->brandAccess()->pluck('brand_id')->all());
+            })
+                ->where($filter)
                 ->where('quantity', '>', 0)
                 ->orderBy($orderBy['field'], $orderBy['sort'])
                 ->paginate(999999);
         } else {
-            $data = $wheel->where($filter)
+            $data = $wheel->whereDoesntHave('brandAccess', function($query) use($user) {
+                $query->where('user_id', '=', $user->id)->whereIn('brand_id', $user->brandAccess()->pluck('brand_id')->all());
+            })
+                ->where($filter)
                 ->where('quantity', '>', 0)
                 ->orderBy($orderBy['field'], $orderBy['sort'])
                 ->paginate(10);

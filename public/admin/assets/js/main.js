@@ -131,4 +131,89 @@ $( document ).ready(function() {
                 }
             });
     });
+
+    $('.btn.accesss_brand').on('click', function(){
+        $('body').css('padding', 0);
+        let legal_name = $(this).parent().parent().find('.legal_name').text();
+        let user_id = $(this).attr('data-userId');
+        let _token = $('input[name="_token"]').val();
+
+        $('.modal-title').find('#legal_name').text(legal_name);
+        $('.modal-body').find('#userId').val(user_id);
+
+        $('#brandList li').remove();
+
+        $.ajax({
+            method: 'POST',
+            url: "/control/settings/getBannedBrandView",
+            data: {user_id:user_id, _token:_token},
+        })
+            .done(function (data) {
+                $.each(data, function(i, item){
+                    $('#brandList').hide();
+                    $('#brandList').append('<li style="margin:2rem;padding:3rem;" class="list-group-item brand'+item.id+'"><span class="text-left">'+item.name+'</span><button style="margin-top:-1rem;" data-brandId="'+item.id+'" class="pull-right btn btn-fill btn-danger deleteBrandAccess">Удалить</button></li>');
+                    $('#brandList').slideDown(200);
+                });
+            });
+    });
+
+    $(document).on("click",".btn.deleteBrandAccess",function() {
+        let user_id = $('form .modal-body #userId').val();
+        let brand_id = $(this).attr('data-brandid');
+        let _token = $('input[name="_token"]').val();
+        let _this = $(this);
+
+        $.ajax({
+            method: 'POST',
+            content: _this,
+            url: "/control/settings/deleteFromBrandAccess",
+            data: {user_id:user_id, brand_id:brand_id, _token:_token},
+        })
+            .done(function (data) {
+                _this.parent().parent().find('.brand'+brand_id).remove();
+            });
+    });
+
+    $('.btn.percent_brand').on('click', function(){
+        $('body').css('padding-right', 0);
+        let legal_name = $(this).parent().parent().find('.legal_name').text();
+        let user_id = $(this).attr('data-userId');
+        let _token = $('input[name="_token"]').val();
+
+        $('.modal-title').find('#legal_name').text(legal_name);
+        $('.modal-body').find('#userId').val(user_id);
+
+        $('#brandList li').remove();
+
+        $.ajax({
+            method: 'POST',
+            url: "/control/settings/getPercentBrandView",
+            data: {user_id:user_id, _token:_token},
+        })
+            .done(function (data) {
+                console.log(data);
+                $.each(data, function(i, item){
+                    $('#brandList').hide();
+                    $('#brandList').append('<li style="margin:2rem;padding:3rem;" class="list-group-item brand'+item.id+'"><span class="text-left">'+item.brand_name+' <b>('+item.percent+'%)</b></span><button style="margin-top:-1rem;" data-brandId="'+item.id+'" class="pull-right btn btn-fill btn-danger deleteBrandPercent">Удалить</button></li>');
+                    $('#brandList').slideDown(200);
+                });
+            });
+    });
+
+    $(document).on("click",".btn.deleteBrandPercent",function() {
+        let user_id = $('form .modal-body #userId').val();
+        let brand_id = $(this).attr('data-brandid');
+        let _token = $('input[name="_token"]').val();
+        let _this = $(this);
+
+        $.ajax({
+            method: 'POST',
+            content: _this,
+            url: "/control/settings/deleteFromBrandPercent",
+            data: {user_id:user_id, brand_id:brand_id, _token:_token},
+        })
+            .done(function (data) {
+                _this.parent().parent().find('.brand'+brand_id).remove();
+            });
+    });
 });

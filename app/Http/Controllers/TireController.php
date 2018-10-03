@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Reserve;
+use App\User;
 use Illuminate\Http\Request;
 use App\Tire;
 use App\Truck;
 use App\Special;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use Excel;
 use File;
@@ -63,6 +65,7 @@ class TireController extends Controller
     public function filter($type, $twidth, $tprofile, $tdiameter, $tseason = '', $tbrand, $tcae = '', $taxis = '',
                            $limit = 10, $sortOptPrice = 'desc', $sortRozPrice = 'desc') {
         $session = Session();
+        $user = Auth::user();
         $filter = array();
         if ($type == 1) { // tires
             $tire = Tire::query();
@@ -124,12 +127,18 @@ class TireController extends Controller
             }
 
             if($limit === 'all') {
-                $data = $tire->where($filter)
+                $data = $tire->whereDoesntHave('brandAccess', function($query) use($user) {
+                    $query->where('user_id', '=', $user->id)->whereIn('brand_id', $user->brandAccess()->pluck('brand_id')->all());
+                })
+                    ->where($filter)
                     ->where('quantity', '>', 0)
                     ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(999999);
             } else {
-                $data = $tire->where($filter)
+                $data = $tire->whereDoesntHave('brandAccess', function($query) use($user) {
+                    $query->where('user_id', '=', $user->id)->whereIn('brand_id', $user->brandAccess()->pluck('brand_id')->all());
+                })
+                    ->where($filter)
                     ->where('quantity', '>', 0)
                     ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(10);
@@ -208,12 +217,18 @@ class TireController extends Controller
             }
 
             if($limit === 'all') {
-                $data = $truck->where($filter)
+                $data = $truck->whereDoesntHave('brandAccess', function($query) use($user) {
+                    $query->where('user_id', '=', $user->id)->whereIn('brand_id', $user->brandAccess()->pluck('brand_id')->all());
+                })
+                    ->where($filter)
                     ->where('quantity', '>', 0)
                     ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(999999);
             } else {
-                $data = $truck->where($filter)
+                $data = $truck->whereDoesntHave('brandAccess', function($query) use($user) {
+                    $query->where('user_id', '=', $user->id)->whereIn('brand_id', $user->brandAccess()->pluck('brand_id')->all());
+                })
+                    ->where($filter)
                     ->where('quantity', '>', 0)
                     ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(10);
@@ -277,12 +292,18 @@ class TireController extends Controller
             }
 
             if($limit === 'all') {
-                $data = $special->where($filter)
+                $data = $special->whereDoesntHave('brandAccess', function($query) use($user) {
+                    $query->where('user_id', '=', $user->id)->whereIn('brand_id', $user->brandAccess()->pluck('brand_id')->all());
+                })
+                    ->where($filter)
                     ->where('quantity', '>', 0)
                     ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(999999);
             } else {
-                $data = $special->where($filter)
+                $data = $special->whereDoesntHave('brandAccess', function($query) use($user) {
+                    $query->where('user_id', '=', $user->id)->whereIn('brand_id', $user->brandAccess()->pluck('brand_id')->all());
+                })
+                    ->where($filter)
                     ->where('quantity', '>', 0)
                     ->orderBy($orderBy['field'], $orderBy['sort'])
                     ->paginate(10);

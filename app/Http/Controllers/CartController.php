@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BrandPercent;
 use App\Cart;
 use App\Events\PusherNotify;
 use App\HistoryOrders;
@@ -91,16 +92,22 @@ class CartController extends Controller
         $products = !empty($session->get('products')) ? $session->get('products') : array();
 
         foreach($products as $product) {
+            $user = Auth::user();
+            $instance = Cart::getInstanceProductType($product['type']);
+            $brandId = $instance->where('tcae', $product['cae'])->first()->brand_id;
+
+            $percent = $user->percent()->where('brand_id', $brandId)->first()->percent_value;
 
             $oid = $order->updateOrCreate([
-                'uid' => Auth::user()->id,
+                'uid' => $user->id,
                 'cnum' => $this->unique_cnum(),
                 'tcae' => $product['cae'],
                 'ptype' => $product['type'],
                 'count' => $product['count'],
                 'sid' => $this->setStatus($product['pid'], $product['type'], $product['count']),
                 'merged' => false,
-                'archived' => false
+                'archived' => false,
+                'percent_value' => $percent,
             ]);
             //add order's history
             $p_info = Cart::getInstanceProductType($product['type'])->where('tcae', $product['cae'])->first();

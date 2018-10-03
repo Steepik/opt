@@ -39,7 +39,9 @@
                 @php
                     $url = preg_replace('/&page=[0-9]|page=[0-9]/', '', request()->getUri());
                 @endphp
-                <a class="page-link" href="{{ $url.'&limit=all' }}" >Отобразить всё</a>
+                @if(!in_array('is_admin', Route::current()->action['middleware']))
+                    <a class="page-link" href="{{ $url.'&limit=all' }}" >Отобразить всё</a>
+                @endif
             </li>
         @else
             <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.next')">

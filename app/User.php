@@ -33,7 +33,17 @@ class User extends Authenticatable
 
     public function orders()
     {
-        return $this->hasMany('App\Order','uid', 'id')->orderBy('created_at', 'DESC');
+        return $this->hasMany('App\Order', 'uid', 'id')->orderBy('created_at', 'DESC');
+    }
+
+    public function brandAccess()
+    {
+        return $this->hasOne(BrandAccess::class, 'user_id', 'id');
+    }
+
+    public function percent()
+    {
+        return $this->hasMany(BrandPercent::class, 'user_id', 'id');
     }
 
     public function scopeIsAdmin($query, $bool)
