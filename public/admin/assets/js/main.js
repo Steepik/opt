@@ -135,7 +135,7 @@ $( document ).ready(function() {
     $('.btn.accesss_brand').on('click', function(){
         $('body').css('padding', 0);
         let legal_name = $(this).parent().parent().find('.legal_name').text();
-        let user_id = $(this).attr('data-userId');
+        let user_id = $(this).attr('data-userid');
         let _token = $('input[name="_token"]').val();
 
         $('.modal-title').find('#legal_name').text(legal_name);
@@ -158,7 +158,7 @@ $( document ).ready(function() {
     });
 
     $(document).on("click",".btn.deleteBrandAccess",function() {
-        let user_id = $('form .modal-body #userId').val();
+        let user_id = $('form .modal-body #userid').val();
         let brand_id = $(this).attr('data-brandid');
         let _token = $('input[name="_token"]').val();
         let _this = $(this);
@@ -177,7 +177,7 @@ $( document ).ready(function() {
     $('.btn.percent_brand').on('click', function(){
         $('body').css('padding-right', 0);
         let legal_name = $(this).parent().parent().find('.legal_name').text();
-        let user_id = $(this).attr('data-userId');
+        let user_id = $(this).attr('data-userid');
         let _token = $('input[name="_token"]').val();
 
         $('.modal-title').find('#legal_name').text(legal_name);
