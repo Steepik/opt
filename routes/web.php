@@ -97,11 +97,11 @@ Route::middleware(['auth', 'is_admin'])->group(function(){
 Route::middleware(['auth', 'is_admin'])->group(function(){
     Route::get('/control/settings', 'Admin\SettingsController@index')->name('settings');
     Route::get('control/settings/brand-view-access', 'Admin\SettingsController@pageBrandAccess')->name('brand-view-access');
-    Route::post('control/settings', 'Admin\SettingsController@accessBrandStore')->name('access-brand-store');
+    Route::post('control/settings/access-brand-store', 'Admin\SettingsController@accessBrandStore')->name('access-brand-store');
     Route::post('control/settings/getBannedBrandView', 'Admin\SettingsController@getBannedBrandView');
     Route::post('control/settings/deleteFromBrandAccess', 'Admin\SettingsController@deleteFromBrandAccess');
     Route::get('control/settings/brand-view-percent', 'Admin\SettingsController@pageBrandPercent')->name('brand-view-percent');
-    Route::post('control/settings', 'Admin\SettingsController@percentBrandStore')->name('percent-brand-store');
+    Route::post('control/settings/percent-brand-store', 'Admin\SettingsController@percentBrandStore')->name('percent-brand-store');
     Route::post('control/settings/getPercentBrandView', 'Admin\SettingsController@getPercentBrandView');
     Route::post('control/settings/deleteFromBrandPercent', 'Admin\SettingsController@deleteFromBrandPercent');
 });
