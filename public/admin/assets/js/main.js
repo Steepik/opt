@@ -158,7 +158,7 @@ $( document ).ready(function() {
     });
 
     $(document).on("click",".btn.deleteBrandAccess",function() {
-        let user_id = $('form .modal-body #userid').val();
+        let user_id = $('form .modal-body #userId').val();
         let brand_id = $(this).attr('data-brandid');
         let _token = $('input[name="_token"]').val();
         let _this = $(this);
