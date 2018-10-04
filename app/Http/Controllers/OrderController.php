@@ -6,6 +6,7 @@ use App\Cart;
 use App\Comment;
 use App\HistoryOrders;
 use App\Order;
+use App\Traits\CalcPercent;
 use Illuminate\Http\Request;
 use App\Tire;
 use App\Truck;
@@ -20,6 +21,8 @@ use App\OrderMerges;
 
 class OrderController extends Controller
 {
+
+    use CalcPercent;
 
     /**
      * @var Order
@@ -81,6 +84,9 @@ class OrderController extends Controller
                             return redirect(route('home'))->with('info-msg', Lang::get('messages.p_deleted', ['num' => $order->cnum]));
                         }
                     }
+
+                    $priceOptOld = $products->getOriginal('price_opt');
+                    $products['price_percent'] = $this->calcPercentForOrder($priceOptOld, $order->id);
                 }
             }
         } else {
@@ -162,6 +168,9 @@ class OrderController extends Controller
                     $products['status'] = $order->status->text;
                     $products['sid'] = $order->status->id;
                     $products['comments'] = $order->comments()->where('oid', $id)->orderBy('created_at', 'ASC')->get();
+
+                    $priceOptOld = $products->getOriginal('price_opt');
+                    $products['price_percent'] = $this->calcPercentForOrder($priceOptOld, $order->id);
                 }
             }
             return view('order.bill', compact(['products', 'ntw']));
@@ -177,7 +186,7 @@ class OrderController extends Controller
         $result = $user->orders()->where('id', $id)->get();
         if (!$result->isEmpty() and $result[0]['sid'] == 5) { // not empty and has status "ready to go waiting for pay"
             foreach ($result as $order) {
-                if ($order->ptype == NULL) { // wheels
+                if ($order->ptype == NULL) {
                     $products['products'] = $this->getProductsForMergedOrder($order->cnum);
                     $products['oid'] = $order->id;
                     $products['cnum'] = $order->cnum;
@@ -220,6 +229,10 @@ class OrderController extends Controller
                     $product = $instance->where('tcae', $order->tcae)->first();
                     if (!is_null($product)) { //if product not found | was deleted
                         $product['count'] = $order->count; //common count for each product
+
+                        $priceOptOld = $product->getOriginal('price_opt');
+                        $product['price_percent'] = $this->calcPercentForOrder($priceOptOld, $order->id);
+
                         $data->push($product);
                     } else {
                         $history = $this->h_order->where('oid', $order->id)->first();
@@ -253,7 +266,10 @@ class OrderController extends Controller
                 $instance = Cart::getInstanceProductType($order->ptype);
                 $tire = $instance->where('tcae', $order->tcae)->first();
                 if(! is_null($tire)) {
-                    $price += $tire->price_opt * $order->count;
+                    $priceOptOld = $tire->getOriginal('price_opt');
+                    $orderPercentPrice = $this->calcPercentForOrder($priceOptOld, $order->id);
+
+                    $price += $orderPercentPrice * $order->count;
                 } else {
                     $h_info = $this->h_order->where('oid', $order->id)->first();
                     $price += $h_info->price_opt * $order->count;

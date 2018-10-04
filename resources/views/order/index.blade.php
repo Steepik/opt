@@ -45,7 +45,7 @@
                             <div class="header text-center">Информация</div><br/>
                             <div class="meta">
                                 <span>Общее кол-во: {{ $products->count }}</span><br/>
-                                <span>Сумма: {{ ($products->price_opt * $products->count) }}p</span><br/>
+                                <span>Сумма: {{ ($products->price_percent * $products->count) }}p</span><br/>
                             </div>
                             <p></p>
                         </div>
@@ -108,11 +108,11 @@
                                 </td>
                                 <td>{{ $products->brand->name }}</td>
                                 <td>{{ $products->price_roz }}p</td>
-                                <td>{{ $products->price_opt }}p</td>
+                                <td>{{ $products->price_percent }}p</td>
                                 <td>{{ $products->count }}</td>
-                                <td data-th="Subtotal" class="text-center">{{ ($products->price_opt * $products->count) }}p</td>
+                                <td data-th="Subtotal" class="text-center">{{ ($products->price_percent * $products->count) }}p</td>
                             </tr>
-                            <?php $total_price += ($products->price_opt * $products->count); ?>
+                            <?php $total_price += ($products->price_percent * $products->count); ?>
                     </tbody>
                 </table>
                 </div>

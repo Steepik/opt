@@ -96,7 +96,7 @@ class CartController extends Controller
             $instance = Cart::getInstanceProductType($product['type']);
             $brandId = $instance->where('tcae', $product['cae'])->first()->brand_id;
 
-            $percent = $user->percent()->where('brand_id', $brandId)->first()->percent_value;
+            $percent = $user->percent()->where('brand_id', $brandId)->first()->percent_value ?? 0;
 
             $oid = $order->updateOrCreate([
                 'uid' => $user->id,

@@ -139,10 +139,10 @@
                         {{ $products->count }}
                     </td>
                     <td>
-                        {{ number_format($products->price_opt, 0, ',', ' ') }}
+                        {{ number_format($products->price_percent, 0, ',', ' ') }}
                     </td>
                     <td>
-                        {{ number_format($products->price_opt * $products->count, 0, ',', ' ') }}
+                        {{ number_format($products->price_percent * $products->count, 0, ',', ' ') }}
                     </td>
                 </tr>
                 </tbody></table>
@@ -153,20 +153,20 @@
 
     <tr>
         <td colspan="2" style="text-align: right;">
-            Итого:&nbsp;{{ number_format($products->price_opt * $products->count, 0) }}&nbsp;
+            Итого:&nbsp;{{ number_format($products->price_percent * $products->count, 0) }}&nbsp;
         </td>
     </tr>
 
     <tr>
         <td colspan="2" style="text-align: right;">
-            <?php $nds = (($products->price_opt * $products->count) / 1.18) * 0.18; ?>
+            <?php $nds = (($products->price_percent * $products->count) / 1.18) * 0.18; ?>
             В том числе НДС: {{ number_format($nds, 2) }}&nbsp;
         </td>
     </tr>
 
     <tr>
         <td colspan="2" style="text-align: left;">
-            <?php $sum = $products->price_opt * $products->count * 100; ?>
+            <?php $sum = $products->price_percent * $products->count * 100; ?>
             &nbsp;&nbsp;&nbsp;&nbsp;Всего к оплате:&nbsp;{{ mb_strtoupper(mb_substr($ntw->getCurrencyTransformer('ru')->toWords($sum, 'RUB'), 0, 1)) . mb_substr($ntw->getCurrencyTransformer('ru')->toWords($sum, 'RUB'), 1) }} 00 копеек
         </td>
     </tr>

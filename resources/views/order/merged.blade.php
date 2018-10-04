@@ -118,11 +118,11 @@
                         </td>
                         <td>{{ $product->brand->name }}</td>
                         <td>{{ $product->price_roz }}p</td>
-                        <td>{{ $product->price_opt }}p</td>
+                        <td>{{ $product->price_percent }}p</td>
                         <td>{{ $product->count }}</td>
-                        <td data-th="Subtotal" class="text-center">{{ ($product->price_opt * $product->count) }}p</td>
+                        <td data-th="Subtotal" class="text-center">{{ ($product->price_percent * $product->count) }}p</td>
                     </tr>
-                    <?php $total_price += ($product->price_opt * $product->count); ?>
+                    <?php $total_price += ($product->price_percent * $product->count); ?>
                     @endforeach
                     </tbody>
                 </table>

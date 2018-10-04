@@ -11,6 +11,7 @@ use App\SelByCar;
 use App\Special;
 use App\StatusText;
 use App\Tire;
+use App\Traits\CalcPercent;
 use App\Truck;
 use App\Wheel;
 use Carbon\Carbon;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
+    use CalcPercent;
+
     /**
      * @var bool
      */
@@ -111,6 +114,10 @@ class HomeController extends Controller
                         return redirect()->back()->with('info-msg', Lang::get('messages.p_deleted', ['num' => $order->cnum]));
                     }
                 }
+
+                $priceOptOld = $products['product']->getOriginal('price_opt');
+                $products['product']['price_percent'] = $this->calcPercentForOrder($priceOptOld, $order->id);
+
             } elseif($order->ptype == null) {
                 $products['product'] = null;
                 $products['product']['oid'] = $order->id;
@@ -122,6 +129,7 @@ class HomeController extends Controller
                 $products['product']['merged'] = 1; // is it merged order? Default = 1;
                 $products['product']['price'] = $this->getMergedOrdersPrice($order->cnum);
             }
+
             $list[] = $products;
         }
 
@@ -370,7 +378,10 @@ class HomeController extends Controller
                 $instance = Cart::getInstanceProductType($order->ptype);
                 $tire = $instance->where('tcae', $order->tcae)->first();
                 if(! is_null($tire)) {
-                    $price += $tire->price_opt * $order->count;
+                    $priceOptOld = $tire->getOriginal('price_opt');
+                    $orderPercentPrice = $this->calcPercentForOrder($priceOptOld, $order->id);
+
+                    $price += $orderPercentPrice * $order->count;
                 } else {
                     $h_info = $this->h_order->where('oid', $order->id)->first();
                     $price += $h_info->price_opt * $order->count;

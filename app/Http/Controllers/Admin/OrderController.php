@@ -121,12 +121,13 @@ class OrderController extends Controller
                $product = Cart::getInstanceProductType($info_order->ptype)->where('tcae', $info_order->tcae)->first();
 
                if ($info_order->percent_value != 0) {
-                   $product->price_opt = $this->calcPercentForOptPrice($product->price_opt, $order->uid, $product->brand_id, $info_order->percent_value);
+                   $product->price_opt = $this->calcPercentForOrder($product->getOriginal('price_opt'), $info_order->id);
                }
 
                if(! is_null($product)) {
                    $product['count'] = $info_order->count;
                    $plist->push($product);
+
                    $total_sum += $product->price_opt * $info_order->count;
                } else {
                    $history = $this->h_order->where('oid', $info_order->id)->first();
@@ -154,7 +155,7 @@ class OrderController extends Controller
         $product = $pinstance->where('tcae', $order->tcae)->first();
 
         if ($order->percent_value != 0) {
-            $product->price_opt = $this->calcPercentForOptPrice($product->price_opt, $order->uid, $product->brand_id, $order->percent_value);
+            $product->price_opt = $this->calcPercentForOrder($product->getOriginal('price_opt'), $order->id);
         }
 
         if(is_null($product)) {
@@ -224,7 +225,7 @@ class OrderController extends Controller
         $product = Cart::getInstanceProductType($order->ptype)->where('tcae', $order->tcae)->first();
 
         if ($order->percent_value != 0) {
-            $product->price_opt = $this->calcPercentForOptPrice($product->price_opt, $order->uid, $product->brand_id, $order->percent_value);
+            $product->price_opt = $this->calcPercentForOrder($product->getOriginal('price_opt'), $order->id);
         }
 
         if(is_null($product)) {
@@ -252,7 +253,7 @@ class OrderController extends Controller
                 $product = Cart::getInstanceProductType($info_order->ptype)->where('tcae', $info_order->tcae)->first();
 
                 if ($info_order->percent_value != 0) {
-                    $product->price_opt = $this->calcPercentForOptPrice($product->price_opt, $order->uid, $product->brand_id, $info_order->percent_value);
+                    $product->price_opt = $this->calcPercentForOrder($product->getOriginal('price_opt'), $info_order->id);
                 }
 
                 if(! is_null($product)) {

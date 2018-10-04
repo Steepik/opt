@@ -85,22 +85,16 @@
                                                 $product = \App\HistoryOrders::where('oid', $order->id)->first();
                                             }
 
-                                            $user = \App\User::find($order->uid);
+                                            $percent = \App\Order::findOrFail($order->id)->percent_value;
 
-                                            foreach($user->percent as $userPercent) {
-                                                if ($product->brand_id == $userPercent->brand_id) {
-                                                    $percent = $order->percent_value;
-
-                                                    if ($percent < 0) { // Decrease by percent
-                                                        $coeff = $product->price_opt / 100;
-                                                        $equil = $coeff * abs($percent); #from negative value to positive
-                                                        $product->price_opt = $product->price_opt - $equil;
-                                                    } else { // Increase by percent
-                                                        $coeff = $product->price_opt / 100;
-                                                        $equil = $coeff * $percent;
-                                                        $product->price_opt = $equil + $product->price_opt;
-                                                    }
-                                                }
+                                            if ($percent < 0) { // Decrease by percent
+                                                $coeff = $product->price_opt / 100;
+                                                $equil = $coeff * abs($percent); #from negative value to positive
+                                                $product->price_opt = $product->price_opt - $equil;
+                                            } else { // Increase by percent
+                                                $coeff = $product->price_opt / 100;
+                                                $equil = $coeff * $percent;
+                                                $product->price_opt = $equil + $product->price_opt;
                                             }
 
                                         }
@@ -179,22 +173,16 @@
                                                     $product = \App\Cart::getInstanceProductType($m_order->ptype)->where('tcae', $m_order->tcae)->first();
 
                                                     if (!is_null($product)) {
-                                                         $user = \App\User::find($m_order->uid);
+                                                        $percent = \App\Order::findOrFail($m_order->id)->percent_value;
 
-                                                        foreach($user->percent as $userPercent) {
-                                                            if ($product->brand_id == $userPercent->brand_id) {
-                                                               $percent = $m_order->percent_value;
-
-                                                                if ($percent < 0) { // Decrease by percent
-                                                                    $coeff = $product->price_opt / 100;
-                                                                    $equil = $coeff * abs($percent); #from negative value to positive
-                                                                    $product->price_opt = $product->price_opt - $equil;
-                                                                } else { // Increase by percent
-                                                                    $coeff = $product->price_opt / 100;
-                                                                    $equil = $coeff * $percent;
-                                                                    $product->price_opt = $equil + $product->price_opt;
-                                                                }
-                                                            }
+                                                        if ($percent < 0) { // Decrease by percent
+                                                            $coeff = $product->price_opt / 100;
+                                                            $equil = $coeff * abs($percent); #from negative value to positive
+                                                            $product->price_opt = $product->price_opt - $equil;
+                                                        } else { // Increase by percent
+                                                            $coeff = $product->price_opt / 100;
+                                                            $equil = $coeff * $percent;
+                                                            $product->price_opt = $equil + $product->price_opt;
                                                         }
                                                     }
 

@@ -111,7 +111,7 @@
                                                 </td>
                                                 <td nowrap>{{ $product->time }}</td>
                                                 <td>{{ $product->count }}</td>
-                                                <td data-th="Subtotal" class="text-center">{{ ($product->price_opt * $product['count']) }}p</td>
+                                                <td data-th="Subtotal" class="text-center">{{ ($product->price_percent * $product['count']) }}p</td>
                                                 <td nowrap>
                                                     @if($product->sid == 1)
                                                         <div class="ui message blue">
@@ -144,7 +144,8 @@
                                                     @endif
                                                 </td>
                                             </tr>
-                                            <?php $total_price += ($product->price_opt * $product->count); ?>
+
+                                            <?php $total_price += ($product->price_percent * $product->count); ?>
                                         @else
                                             <tr align="center">
                                                 <td><div class="ui checkbox"><input class="checkbox-prod" value="{{ $product['oid'] }}" name="oid[]" type="checkbox"><label></label></div></td>

@@ -140,10 +140,10 @@
                             {{ $product->count }}
                         </td>
                         <td>
-                            {{ number_format($product->price_opt, 0, ',', ' ') }}
+                            {{ number_format($product->price_percent, 0, ',', ' ') }}
                         </td>
                         <td>
-                            {{ number_format($product->price_opt * $product->count, 0, ',', ' ') }}
+                            {{ number_format($product->price_percent * $product->count, 0, ',', ' ') }}
                         </td>
                     </tr>
                 @endforeach
