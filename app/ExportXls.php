@@ -3,6 +3,7 @@
 namespace App;
 
 use Excel;
+use Illuminate\Support\Facades\Auth;
 
 class ExportXls
 {
@@ -38,8 +39,9 @@ class ExportXls
                         ),
                     ));
                     $in_reserve = Reserve::pluck('tcae')->all();
+                    $brandAccess = BrandAccess::where('user_id', Auth::user()->id)->pluck('brand_id')->all();
 
-                    $tires = Tire::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
+                    $tires = Tire::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->whereNotIn('brand_id', $brandAccess)->get();
 
                     foreach($tires as $tire) {
                         $sheet->rows(array(
@@ -87,7 +89,9 @@ class ExportXls
                     ));
                     $in_reserve = Reserve::pluck('tcae')->all();
 
-                    $wheels = Wheel::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->get();
+                    $brandAccess = BrandAccess::where('user_id', Auth::user()->id)->pluck('brand_id')->all();
+
+                    $wheels = Wheel::whereNotIn('tcae', $in_reserve)->where('quantity', '>', 0)->whereNotIn('brand_id', $brandAccess)->get();
 
                     foreach($wheels as $wheel) {
                         $sheet->rows(array(
