@@ -77,6 +77,10 @@ class HomeController extends Controller
         return view('home', compact(['tires', 'wheels', 'list', 'tire_brands', 'truck_brands', 'special_brands', 'wheels_brands', 'vendors']));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function orderList(Request $request)
     {
         $get_status = StatusText::all();
