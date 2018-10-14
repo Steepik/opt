@@ -202,7 +202,7 @@
                             <div class="fields">
                                 <div class="field">
                                     <label>PCD</label>
-                                    <input type="text" name="pcd" placeholder="67.1">
+                                    <input type="text" name="pcd" placeholder="108">
                                 </div>
                                 <div class="field">
                                     <label>Вылет</label>
@@ -210,7 +210,7 @@
                                 </div>
                                 <div class="field">
                                     <label>DIA</label>
-                                    <input type="text" name="dia" placeholder="108">
+                                    <input type="text" name="dia" placeholder="67.1">
                                 </div>
                             </div>
                             <div class="fields">
@@ -225,7 +225,7 @@
                                 </div>
                                 <div class="field">
                                     <label>Тип диска</label>
-                                    <select class="form-control" name="type">
+                                    <select class="form-control" name="d_type">
                                         <option value="">Любой</option>
                                         <option value="Литой" {{ Session::get('type') == 'Литой' ? 'selected' : '' }}>Литой</option>
                                         <option value="Штампованный" {{ Session::get('type') == 'Литой' ? 'Штампованный' : '' }}>Штампованный</option>
