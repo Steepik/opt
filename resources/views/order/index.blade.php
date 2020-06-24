@@ -103,7 +103,7 @@
                                     @php
                                         $image_id = \App\Tire::brandImage($products->brand->name)->first();
                                     @endphp
-                                    <img src="//torgshina.com/image/manufacturer/{{ $image_id->manufacturer_id }}.jpg" style="width:100px;" alt="{{ $products->brand->name }}">
+                                    <img src="//torgshina.com/image/manufacturer/{{ $image_id->manufacturer_id ?? '' }}.jpg" style="width:100px;" alt="{{ $products->brand->name }}">
                                     <h4 class="order-product-name-inside">{{ $products->name }}</h4>
                                 </td>
                                 <td>{{ $products->brand->name }}</td>
