@@ -60,8 +60,8 @@ class HomeController extends Controller
 
     public function index()
     {
-        $tireTcae = BestDeals::where('ptype', 1)->orderBy('created_at')->limit(6)->pluck('tcae')->all();
-        $wheelTcae = BestDeals::where('ptype', 4)->orderBy('created_at')->limit(6)->pluck('tcae')->all();
+        $tireTcae = BestDeals::where('ptype', 1)->orderBy('created_at')->pluck('tcae')->all();
+        $wheelTcae = BestDeals::where('ptype', 4)->orderBy('created_at')->pluck('tcae')->all();
 
         $tires = Tire::whereIn('tcae', $tireTcae)->get();
         $wheels = Wheel::whereIn('tcae', $wheelTcae)->get();

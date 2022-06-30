@@ -244,8 +244,8 @@
                                     <td class="center aligned" style="font-style: italic;"><b>{{ $tire->price_opt }}</b></td>
                                     @endif
                                     <td class="center aligned" style="font-style: italic;">
-                                        @if($tire->quantity > 8)
-                                            <b> > 8 </b>
+                                        @if($tire->quantity > 20)
+                                            <b> > 20 </b>
                                         @else
                                             <b>{{ $tire->quantity }}</b>
                                         @endif

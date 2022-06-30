@@ -124,8 +124,8 @@
                                             <td style="font-style: italic;"><b>{{ $wheel->price_opt }}</b></td>
                                             @endif
                                             <td style="font-style: italic;">
-                                                @if($wheel->quantity > 8)
-                                                    <b> > 8 </b>
+                                                @if($wheel->quantity > 20)
+                                                    <b> > 20 </b>
                                                 @else
                                                     <b>{{ $wheel->quantity }}</b>
                                                 @endif
