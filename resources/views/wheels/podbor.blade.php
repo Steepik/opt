@@ -112,7 +112,7 @@
                                                             @php
                                                                 $image_id = \App\Wheel::brandImage($wheel->brand->name)->first();
                                                             @endphp
-                                                            <img src="//torgshina.com/image/manufacturer/{{ $image_id->manufacturer_id ?? }}.jpg" alt="{{ $wheel->brand->name }}">
+                                                            <img src="//torgshina.com/image/manufacturer/{{ $image_id->manufacturer_id ?? '' }}.jpg" alt="{{ $wheel->brand->name }}">
                                                         </div><br/>
                                                         <span class="podbor-prod-name">{{ $wheel->name }}</span>
                                                         <div class="sub header">{{ $wheel->tcae }}
